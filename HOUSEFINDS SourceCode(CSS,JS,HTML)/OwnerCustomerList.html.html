@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner - Customer List</title>
+  <link rel="stylesheet" href="Ownerprofilee.css">
+
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    .page {
+      padding: 40px 80px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .homebutton:hover {
+      color: #ff9800;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .btn-small {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+
+    .btn-view {
+      background: #2196f3;
+      color: #fff;
+    }
+
+    .btn-profile {
+      background: #9c27b0;
+      color: #fff;
+    }
+
+    .muted {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    /* MODAL STYLES */
+    .modal {
+      display: none;           /* hidden by default */
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      width: 360px;
+      max-width: 90%;
+      padding: 24px 20px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      position: relative;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .close-btn:hover {
+      color: #000;
+    }
+
+    .profile-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 3px solid #ff9800;
+    }
+
+    .modal-content h2 {
+      margin: 6px 0 10px;
+      font-size: 20px;
+    }
+
+    .modal-content p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .modal-content p b {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerBooking.html'" class="booking">Booking</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <h1>Customer list</h1>
+    <p class="hint">
+      This table will automatically show customers who made reservations for your houses.  
+      "Days left" is based on the nearest upcoming reservation's end date.
+    </p>
+
+    <table id="customersTable">
+      <thead>
+        <tr>
+          <th>Customer name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Total reservations</th>
+          <th>Days left</th>
+          <th>View profile</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- filled by JS -->
+      </tbody>
+    </table>
+
+    <p id="emptyMessage" class="muted" style="display:none;">
+      No reservations yet. Once a customer makes a reservation, they will appear here.
+    </p>
+  </main>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeProfile()">&times;</span>
+
+    <img id="profileImg" class="profile-img" src="defaultpfp.jpg" alt="Profile Picture">
+
+    <h2 id="profileName"></h2>
+    <p><b>Email:</b> <span id="profileEmail"></span></p>
+    <p><b>Phone:</b> <span id="profilePhone"></span></p>
+    <p><b>Total Reservations:</b> <span id="profileResCount"></span></p>
+    <p><b>Days Left:</b> <span id="profileDaysLeft"></span></p>
+  </div>
+</div>
+
+<script>
+  function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      allUsers = allUsers.filter(user => user.email !== loggedInUser.email);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      localStorage.removeItem("loggedInUser");
+
+      alert("Account deleted successfully.");
+      window.location.href = "landingpage.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "landingpage.html";
+  }
+
+  // helper: compute days left from today to endDate (YYYY-MM-DD)
+  function computeDaysLeft(endDateStr) {
+    if (!endDateStr) return null;
+    const today = new Date();
+    const endDate = new Date(endDateStr);
+
+    if (isNaN(endDate.getTime())) return null;
+
+    const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const t1 = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+    const diffMs = t1 - t0;
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const tbody = document.querySelector("#customersTable tbody");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    // Must be logged in as OWNER
+    if (!user || user.role !== "owner") {
+      tbody.innerHTML = "";
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 7;
+      td.textContent = "Please log in as an owner to view accepted customers.";
+      td.style.textAlign = "center";
+      td.style.padding = "16px";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
+    }
+
+    let reservations = JSON.parse(localStorage.getItem("reservations") || "[]");
+
+    // ⭐ Only this owner's ACCEPTED reservations
+    const ownerAccepted = reservations.filter(
+      res => res.ownerId === user.id && res.status === "accepted"
+    );
+
+    if (ownerAccepted.length === 0) {
+      emptyMessage.style.display = "block";
+      return;
+    }
+
+    // ⭐ Group by customer email
+    const customersMap = {};
+
+    ownerAccepted.forEach(res => {
+      const key = res.customerEmail || ("guest-" + (res.customerName || "Unknown"));
+
+      if (!customersMap[key]) {
+        customersMap[key] = {
+          customerName: res.customerName || "Unknown",
+          customerEmail: res.customerEmail || "Unknown",
+          customerPhone: res.customerPhone || "-",
+          reservations: []
+        };
+      }
+
+      customersMap[key].reservations.push(res);
+    });
+
+    const customers = Object.values(customersMap);
+
+    customers.forEach(customer => {
+      // compute nearest days left among reservations
+      let nearestDaysLeft = null;
+
+      customer.reservations.forEach(r => {
+        const d = computeDaysLeft(r.endDate);
+        if (d !== null && d >= 0 && (nearestDaysLeft === null || d < nearestDaysLeft)) {
+          nearestDaysLeft = d;
+        }
+      });
+
+      let daysLeftText = "";
+      if (nearestDaysLeft === null) {
+        daysLeftText = "—";
+      } else if (nearestDaysLeft === 0) {
+        daysLeftText = "Ends today";
+      } else {
+        daysLeftText = nearestDaysLeft + " day(s)";
+      }
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${customer.customerName}</td>
+        <td>${customer.customerEmail}</td>
+        <td>${customer.customerPhone}</td>
+        <td>${customer.reservations.length}</td>
+        <td>${daysLeftText}</td>
+        <td><button class="btn-small btn-profile">View Profile</button></td>
+        <td><button class="btn-small btn-view">View Reservations</button></td>
+      `;
+
+      // Profile button → open modal
+      tr.querySelector(".btn-profile").addEventListener("click", function () {
+        showProfileModal(customer);
+      });
+
+      // View all reservations → popup summary (keep)
+      tr.querySelector(".btn-view").addEventListener("click", function () {
+        const summary = customer.reservations
+          .map(r => {
+            return (
+              `House: ${r.houseName}\n` +
+              `Room: ${r.roomName}\n` +
+              `Start: ${r.startDate}\n` +
+              `End: ${r.endDate || "Not set"}\n` +
+              `Status: ${r.status || "pending"}\n`
+            );
+          })
+          .join("\n-----------------------------\n\n");
+
+        alert(`Reservations for ${customer.customerName}:\n\n${summary}`);
+      });
+
+      tbody.appendChild(tr);
+    });
+  });
+
+  function showProfileModal(customer) {
+    // Try to find matching user from allUsers
+    const allUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
+    const userInfo = allUsers.find(u => u.email === customer.customerEmail);
+
+    const profilePic = userInfo && userInfo.profileImage
+      ? userInfo.profileImage
+      : "defaultpfp.jpg"; // change file name if your default image is different
+
+    // Recompute nearest days left for this customer
+    let nearestDaysLeft = null;
+    customer.reservations.forEach(r => {
+      const d = computeDaysLeft(r.endDate);
+      if (d !== null && d >= 0 && (nearestDaysLeft === null || d < nearestDaysLeft)) {
+        nearestDaysLeft = d;
+      }
+    });
+
+    let daysLeftText = "—";
+    if (nearestDaysLeft === 0) daysLeftText = "Ends today";
+    else if (nearestDaysLeft > 0) daysLeftText = nearestDaysLeft + " day(s)";
+
+    // Fill modal content
+    document.getElementById("profileImg").src = profilePic;
+    document.getElementById("profileName").innerText = customer.customerName;
+    document.getElementById("profileEmail").innerText = customer.customerEmail;
+    document.getElementById("profilePhone").innerText = customer.customerPhone;
+    document.getElementById("profileResCount").innerText = customer.reservations.length;
+    document.getElementById("profileDaysLeft").innerText = daysLeftText;
+
+    // Show modal
+    document.getElementById("profileModal").style.display = "flex";
+  }
+
+  function closeProfile() {
+    document.getElementById("profileModal").style.display = "none";
+  }
+
+  // Close modal when clicking outside the box
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("profileModal");
+    if (e.target === modal) {
+      closeProfile();
+    }
+  });
+</script>
+
+</body>
+</html>

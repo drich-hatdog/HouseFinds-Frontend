@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner Houses - HouseFinds</title>
+
+  <link rel="stylesheet" href="Ownerprofilee.css">
+  <link rel="stylesheet" href="OwnerHouses.css">
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerCustomerList.html.html'" class="custolist">Customer list</span>
+      <span onclick="window.location.href='OwnerBooking.html'" class="booking">Booking</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <div class="houses-wrapper">
+
+      <div class="create-placeholder" id="emptyCard"
+           onclick="window.location.href='CreateHouse.html'">
+        <span>( Click here )</span>
+      </div>
+
+      <div id="housesList"></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // Back button → go to owner profile page
+  function goBackToOwnerProfile() {
+    window.location.href = "OWnerPRofile.html";
+  }
+
+  // When page loads, show saved houses
+  document.addEventListener("DOMContentLoaded", function () {
+    const housesList = document.getElementById("housesList");
+    let houses = JSON.parse(localStorage.getItem("houses") || "[]");
+
+    if (houses.length === 0) {
+      return;
+    }
+
+    houses.forEach(house => {
+      const card = document.createElement("div");
+      card.className = "house-card";
+
+      // compute price summary from rooms
+      let priceSummary = "No rooms yet";
+      if (Array.isArray(house.rooms) && house.rooms.length > 0) {
+        const prices = house.rooms
+          .map(r => parseFloat(r.roomPrice))
+          .filter(n => !isNaN(n));
+        if (prices.length > 0) {
+          const minPrice = Math.min(...prices);
+          priceSummary = "From ₱" + minPrice;
+        }
+      }
+
+      card.innerHTML = `
+        ${house.imageDataUrl ? `<img class="house-img" src="${house.imageDataUrl}" alt="${house.houseName}">` : ""}
+        <div class="house-info">
+          <h3>${house.houseName}</h3>
+          <p class="line">${priceSummary} • ${house.numRooms} rooms</p>
+          <p class="line">${house.location}</p>
+        </div>
+
+        <!-- HOVER OVERLAY -->
+        <div class="details-overlay">
+          <div>
+            <div class="details-title">Description</div>
+            <div class="details-text">
+              ${house.description && house.description.trim() !== "" 
+                ? house.description.replace(/\n/g, "<br>") 
+                : "No description provided."}
+            </div>
+          </div>
+          <div class="details-bottom">
+            ${house.mapLocation && house.mapLocation.trim() !== "" 
+              ? `
+                <div>Map location:</div>
+                <a href="${house.mapLocation}" target="_blank" class="map-link" onclick="event.stopPropagation()">
+                  View on Google Maps
+                </a>
+              `
+              : `<span class="no-map">No map location set.</span>`
+            }
+            <button class="view-rooms-btn"
+              onclick="event.stopPropagation(); window.location.href='HouseDetails.html?id=${encodeURIComponent(house.id)}';">
+              View details
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Click whole card → go to full details page
+      card.addEventListener("click", function () {
+        window.location.href = "HouseDetails.html?id=" + encodeURIComponent(house.id);
+      });
+
+      housesList.appendChild(card);
+    });
+  });
+
+  // Same deleteAccount function as in OWnerPRofile.html
+  function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      allUsers = allUsers.filter(user => user.email !== loggedInUser.email);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      localStorage.removeItem("loggedInUser");
+
+      alert("Account deleted successfully.");
+      window.location.href = "landingpage.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "landingpage.html";
+  }
+</script>
+
+</body>
+</html>

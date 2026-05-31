@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner - Booking</title>
+  <link rel="stylesheet" href="Ownerprofilee.css">
+
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    .page {
+      padding: 40px 80px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .btn-small {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+
+    .btn-accept {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .btn-cancel {
+      background: #f44336;
+      color: #fff;
+    }
+
+    .btn-extend {
+      background: #1976d2;
+      color: #fff;
+    }
+
+    .muted {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .payment-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      display: inline-block;
+    }
+
+    .payment-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .payment-paid {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .payment-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* readonly-looking end date */
+    .end-date-display {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      font-family: inherit;
+      background: transparent;
+      color: #333;
+    }
+
+    .end-date-small {
+      font-size: 12px;
+      color:#666;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- NAVBAR: Home, Booking, Profile -->
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+
+    <nav class="nav-links">
+        <span onclick="window.location.href='OwnerCustomerList.html.html'" class="custolist">Customer list</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <h1>Booking confirmation</h1>
+    <p class="hint">
+      Here you can review customer reservations.
+
+    <table id="bookingTable">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th>House / Room</th>
+          <th>Start date</th>
+          <th>End date <small class="end-date-small">(customer-selected)</small></th>
+          <th>Days left</th>
+          <th>Payment</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- filled by JS -->
+      </tbody>
+    </table>
+
+    <p id="emptyMessage" class="muted" style="display:none;">
+      No pending bookings yet. Once a customer reserves a room, it will appear here for confirmation.
+    </p>
+  </main>
+</div>
+
+<script>
+function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      allUsers = allUsers.filter(user => user.email !== loggedInUser.email);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      localStorage.removeItem("loggedInUser");
+
+      alert("Account deleted successfully.");
+      window.location.href = "landingpage.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "landingpage.html";
+  }
+
+
+  function computeDaysLeft(endDateStr) {
+    if (!endDateStr) return null;
+    const today = new Date();
+    const endDate = new Date(endDateStr);
+    if (isNaN(endDate.getTime())) return null;
+
+    const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const t1 = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+    const diffMs = t1 - t0;
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+  }
+
+
+  function paymentPill(status) {
+    status = (status || "pending").toLowerCase();
+    let label = "";
+    let cls = "";
+
+    if (status === "accepted") {
+      label = "Accepted";
+      cls = "payment-paid";
+    } else if (status === "paid") {
+      label = "Paid";
+      cls = "payment-paid";
+    } else if (status === "declined" || status === "cancelled") {
+      label = "Declined";
+      cls = "payment-cancelled";
+    } else {
+      label = "Pending";
+      cls = "payment-pending";
+    }
+
+    return `<span class="payment-pill ${cls}">${label}</span>`;
+  }
+
+
+  function logBookingChange(bookingId, changedByUserId, changeType, oldValue, newValue, reason = "") {
+    const changes = JSON.parse(localStorage.getItem("booking_changes") || "[]");
+    changes.push({
+      id: Date.now().toString() + Math.floor(Math.random()*1000),
+      bookingId,
+      changedByUserId,
+      changeType,
+      oldValue,
+      newValue,
+      reason,
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem("booking_changes", JSON.stringify(changes));
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const tbody = document.querySelector("#bookingTable tbody");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    // must be logged in as OWNER
+    if (!user || user.role !== "owner") {
+      tbody.innerHTML = "";
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 8;
+      td.textContent = "Please log in as an owner to view bookings.";
+      td.style.textAlign = "center";
+      td.style.padding = "16px";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
+    }
+
+    let reservations = JSON.parse(localStorage.getItem("reservations") || "[]");
+    let houses = JSON.parse(localStorage.getItem("houses") || "[]");
+
+
+    const houseMap = {};
+    houses.forEach(h => {
+      houseMap[h.id] = h;
+    });
+
+
+    const ownerReservations = reservations.filter(res => res.ownerId === user.id);
+
+    if (ownerReservations.length === 0) {
+      emptyMessage.style.display = "block";
+      return;
+    }
+
+    ownerReservations.forEach(res => {
+      const tr = document.createElement("tr");
+
+      const house = houseMap[res.houseId];
+      let houseName = house ? house.houseName : (res.houseName || "Unknown house");
+
+
+      let roomLabel = "";
+      if (house && Array.isArray(house.rooms)) {
+        const room = house.rooms.find(r => r.id === res.roomId);
+        if (room) {
+          roomLabel = `Room ${room.roomNumber || ""} (${room.roomType || "Room"})`;
+        }
+      }
+      if (!roomLabel) {
+        roomLabel = res.roomName || (res.roomId ? `Room ID: ${res.roomId}` : "Unknown room");
+      }
+
+      const endValue = res.endDate || "";
+      const daysLeft = computeDaysLeft(endValue);
+      let daysLeftText = "";
+      if (daysLeft === null) {
+        daysLeftText = "—";
+      } else if (daysLeft === 0) {
+        daysLeftText = "Ends today";
+      } else if (daysLeft < 0) {
+        daysLeftText = "Ended";
+      } else {
+        daysLeftText = daysLeft + " day(s)";
+      }
+
+
+      tr.innerHTML = `
+        <td>${res.customerName || "Unknown"}</td>
+        <td>
+          <div>${res.customerEmail || "Unknown"}</div>
+          <div>${res.customerPhone || "-"}</div>
+        </td>
+        <td>
+          <div>${houseName}</div>
+          <div style="font-size:12px;color:#666;">${roomLabel}</div>
+        </td>
+        <td>${res.startDate || "-"}</td>
+        <td>
+          <span class="end-date-display">${endValue || "—"}</span>
+          <input type="hidden" class="end-date-hidden" value="${endValue}">
+        </td>
+        <td>${daysLeftText}</td>
+        <td>${paymentPill(res.status)}</td>
+        <td>
+          <button class="btn-small btn-accept">Accept</button>
+          <button class="btn-small btn-cancel">Decline</button>
+          <button class="btn-small btn-extend">Extend</button>
+        </td>
+      `;
+
+      const acceptBtn = tr.querySelector(".btn-accept");
+      const cancelBtn = tr.querySelector(".btn-cancel");
+      const extendBtn = tr.querySelector(".btn-extend");
+      const endDateDisplay = tr.querySelector(".end-date-display");
+      const endDateHidden = tr.querySelector(".end-date-hidden");
+
+
+      acceptBtn.addEventListener("click", function () {
+        let allRes = JSON.parse(localStorage.getItem("reservations") || "[]");
+        const idx = allRes.findIndex(r => r.id === res.id);
+        if (idx === -1) return;
+
+
+        allRes[idx].status = "accepted";
+        localStorage.setItem("reservations", JSON.stringify(allRes));
+        alert("Booking accepted.");
+
+        window.location.href = "OwnerCustomerList.html.html";
+      });
+
+
+      cancelBtn.addEventListener("click", function () {
+        if (!confirm("Decline this booking?")) return;
+        let allRes = JSON.parse(localStorage.getItem("reservations") || "[]");
+        const idx = allRes.findIndex(r => r.id === res.id);
+        if (idx === -1) return;
+        allRes[idx].status = "declined";
+        localStorage.setItem("reservations", JSON.stringify(allRes));
+        alert("Booking declined.");
+        window.location.reload();
+      });
+
+
+      extendBtn.addEventListener("click", function () {
+        const currentEnd = endDateHidden.value;
+
+        const input = prompt(`Propose a new end date (YYYY-MM-DD). Current end date: ${currentEnd}\n\nNote: You may only propose a date that is the same or later than the current end date.`);
+        if (!input) return; 
+
+
+        const newDate = new Date(input);
+        const oldDate = new Date(currentEnd);
+        if (isNaN(newDate.getTime())) {
+          alert("Invalid date format. Use YYYY-MM-DD.");
+          return;
+        }
+
+
+        const newDay = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+        const oldDay = new Date(oldDate.getFullYear(), oldDate.getMonth(), oldDate.getDate());
+        if (newDay < oldDay) {
+          alert("You cannot propose a date earlier than the current end date. If you need to shorten, please contact support or follow cancellation policy.");
+          return;
+        }
+
+        
+        if (newDay.getTime() === oldDay.getTime()) {
+          alert("Proposed date is same as current end date — no changes made.");
+          return;
+        }
+
+
+        let allRes = JSON.parse(localStorage.getItem("reservations") || "[]");
+        const idx = allRes.findIndex(r => r.id === res.id);
+        if (idx === -1) {
+          alert("Reservation not found.");
+          return;
+        }
+
+
+        const otherReservations = allRes.filter(r => r.id !== res.id && r.roomId === res.roomId && r.houseId === res.houseId && (r.status === "accepted" || r.status === "paid" || r.status === "pending"));
+        
+        const proposedEnd = new Date(input + "T23:59:59");
+        const currentEndDate = new Date(currentEnd + "T23:59:59");
+        const conflict = otherReservations.some(o => {
+          if (!o.startDate) return false;
+          const otherStart = new Date(o.startDate + "T00:00:00");
+
+          return (otherStart <= proposedEnd) && (otherStart > currentEndDate);
+        });
+
+        if (conflict) {
+          if (!confirm("WARNING: The proposed extension may conflict with other reservations for this room. Proceed anyway?")) {
+            return;
+          }
+        }
+
+        const oldVal = allRes[idx].endDate || "";
+        allRes[idx].endDate = input;
+
+        allRes[idx].status = allRes[idx].status || "accepted";
+        localStorage.setItem("reservations", JSON.stringify(allRes));
+
+
+        endDateHidden.value = input;
+        endDateDisplay.textContent = input;
+
+ 
+        logBookingChange(res.id, user.id, "extend_end_date", oldVal, input, "Owner proposed extension");
+
+        alert("Extension proposed and saved locally. Customer should be notified by your system (implement notification).");
+
+        window.location.reload();
+      });
+
+      tbody.appendChild(tr);
+    });
+  });
+</script>
+</body>
+</html>

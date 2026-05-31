@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Reservations</title>
+
+<link rel="stylesheet" href="Ownerprofilee.css">
+<link rel="stylesheet" href="customerReservations.css">
+</head>
+
+<body>
+<div class="container">
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+
+  <nav class="nav-links">
+    <span onclick="goDashboard()" class="Dashboard">Dashboard</span>
+    <span onclick="goReservations()" class="Reservations">Reservations</span>
+  </nav>
+
+  <div class="logout-btn" onclick="logout()">Log Out</div>
+</header>
+
+<main class="reservation-container">
+  <h1 class="title">My Reservations</h1>
+  <p class="subtitle">Track your boarding house reservations, payment status, and approval from owners.</p>
+
+  <table class="reservation-table">
+    <thead>
+      <tr>
+        <th>House</th>
+        <th>Room</th>
+        <th>Price</th>
+        <th>Months</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="reservationBody">
+    </tbody>
+  </table>
+
+</main>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  loadReservations();
+});
+function loadReservations() {
+  const tbody = document.getElementById("reservationBody");
+  const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+  let reservations = JSON.parse(localStorage.getItem("reservations") || "[]");
+
+  if (user) {
+    reservations = reservations.filter(res =>
+      res.customerId === user.id || res.customerEmail === user.email
+    );
+  }
+
+  tbody.innerHTML = "";
+
+  if (!reservations.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 7;
+    td.textContent = "No reservations found.";
+    td.style.textAlign = "center";
+    td.style.padding = "12px";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  reservations.forEach(res => {
+    const tr = document.createElement("tr");
+
+    const ownerPhone = res.ownerPhone || res.ownerContact || res.ownerPhoneNumber || ""; 
+    const priceDisplay = `₱${Number(res.price || 0).toLocaleString("en-PH")}`;
+
+    tr.innerHTML = `
+      <td>${escapeHtml(res.houseName || "Unknown house")}</td>
+      <td>${escapeHtml(res.roomName || res.room || "Room")}</td>
+      <td>${priceDisplay}</td>
+      <td>${res.months || 0}</td>
+      <td>${escapeHtml(res.paymentMethod || "None")}</td>
+      <td class="${statusColor(res.status)}">${(res.status || "Pending").toUpperCase()}</td>
+      <td class="actions-cell"></td>
+    `;
+
+    const actionsCell = tr.querySelector(".actions-cell");
+
+    /** SMS BUTTON **/
+    const smsBtn = document.createElement("button");
+    smsBtn.className = "action-btn btn-sms";
+    smsBtn.textContent = "SMS Owner";
+    smsBtn.addEventListener("click", () => {
+      sendSmsToOwner(res, ownerPhone);
+    });
+    actionsCell.appendChild(smsBtn);
+
+    /** PAY AGAIN BUTTON **/
+    if (!res.status || res.status.toLowerCase() !== "paid") {
+      const payBtn = document.createElement("button");
+      payBtn.className = "action-btn btn-pay";
+      payBtn.textContent = "Pay Again";
+      payBtn.addEventListener("click", () => {
+        payAgainFlow(res);
+      });
+      actionsCell.appendChild(payBtn);
+    } else {
+      const done = document.createElement("span");
+      done.className = "muted";
+      done.style.fontWeight = "600";
+      done.textContent = "Paid";
+      actionsCell.appendChild(done);
+    }
+
+    tbody.appendChild(tr);
+  });
+}
+
+/**
+ * Simulate "Pay Again" flow
+ */
+function payAgainFlow(reservation) {
+  if (!confirm(`Proceed to pay ₱${Number(reservation.price || 0).toLocaleString("en-PH")} for ${reservation.houseName || "this reservation"}?`)) {
+    return;
+  }
+
+  // mock payment success
+  let allRes = JSON.parse(localStorage.getItem("reservations") || "[]");
+  const idx = allRes.findIndex(r => r.id === reservation.id);
+  if (idx !== -1) {
+    allRes[idx].status = "paid";
+    localStorage.setItem("reservations", JSON.stringify(allRes));
+  }
+
+  alert("Payment successful (mock). Reservation updated to PAID.");
+  loadReservations();
+}
+
+/**
+ * Open SMS app on mobile or simulate SMS on desktop.
+ */
+function sendSmsToOwner(reservation, ownerPhone) {
+  const defaultMsg = `Hello ${reservation.ownerName || "owner"}, I (${reservation.customerName || "customer"}) have a question about my reservation (ID: ${reservation.id}).`;
+  const message = prompt("Message to owner:", defaultMsg);
+  if (message === null) return;
+
+  if (!ownerPhone) {
+    alert("Owner phone number not found.");
+    return;
+  }
+
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  if (isMobile) {
+    const encoded = encodeURIComponent(message);
+    window.location.href = `sms:${ownerPhone}?body=${encoded}`;
+    return;
+  }
+
+  alert("SMS feature works only on mobile devices.");
+}
+
+
+function statusColor(stat) {
+  const s = (stat || "").toLowerCase();
+  if (s === "pending") return "status-pending";
+  if (s === "paid") return "status-paid";
+  if (s === "accepted") return "status-accepted";
+  if (s === "declined" || s === "cancelled") return "status-declined";
+  return "";
+}
+
+function escapeHtml(text) {
+  if (!text && text !== 0) return "";
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function goHome() { window.location.href = "Customerprofile.html"; }
+function goDashboard() { window.location.href = "customerDashboard.html"; }
+function goReservations() { window.location.href = "customerReservations.html"; }
+function logout() { localStorage.removeItem("loggedInUser"); window.location.href = "landingpage.html"; }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservation</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Ownerprofilee.css">
+<link rel="stylesheet" href="customerReserve.css">
+
+</head>
+
+<body>
+<div class="container">
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+
+  <nav class="nav-links">
+    <span class="booking" onclick="goDashboard()">Dashboard</span>
+    <span class="custolist" onclick="goReservations()">Reservations</span>
+  </nav>
+
+  <div class="logout-btn" onclick="logout()">Log Out</div>
+</header>
+
+<main class="reserve-container">
+
+  <h1 class="title">Reservation Form</h1>
+
+  <!-- CUSTOMER INFO (auto-filled) -->
+  <section class="info-section">
+    <h2>Your Information</h2>
+
+    <label>Full Name</label>
+    <input type="text" id="fullName" readonly>
+
+    <label>Contact Number</label>
+    <input type="text" id="contactNumber" readonly>
+  </section>
+
+  <!-- ROOM SELECTION -->
+  <section class="rooms-section">
+    <h2>Select a Room</h2>
+    <div id="roomCards" class="rooms-grid"></div>
+  </section>
+
+  <!-- DURATION -->
+  <section class="duration-section">
+    <h2>Duration of Stay</h2>
+
+    <label>Months</label>
+    <input type="number" id="duration" min="1" placeholder="Enter number of months">
+  </section>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="submitReservation()">Proceed to Payment</button>
+  </div>
+
+</main>
+</div>
+
+<script>
+  let selectedRoom = null;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const fullNameInput = document.getElementById("fullName");
+    const contactInput = document.getElementById("contactNumber");
+    const roomCards = document.getElementById("roomCards");
+
+    // Fill user info
+    if (user) {
+      fullNameInput.value = `${user.firstName} ${user.lastName}`;
+      contactInput.value = user.phone || "";
+    }
+
+    // Load house + rooms
+    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
+    const houseIndex = parseInt(localStorage.getItem("selectedHouse"), 10);
+    const house = houses[houseIndex];
+
+    if (!house || !Array.isArray(house.rooms) || house.rooms.length === 0) {
+      roomCards.innerHTML = "<p>No rooms available for this house.</p>";
+      return;
+    }
+
+    house.rooms.forEach((room, index) => {
+      const card = document.createElement("div");
+      card.classList.add("room-card");
+
+      card.innerHTML = `
+        <p class="room-name"><b>${room.roomType || "Room"}</b></p>
+        <p>Room No.: ${room.roomNumber || "-"}</p>
+        <p>Price: ₱${room.roomPrice || room.price || 0} / month</p>
+        <p class="room-desc">${room.roomDescription || ""}</p>
+      `;
+
+      card.addEventListener("click", () => {
+        selectedRoom = index;
+        document.querySelectorAll(".room-card").forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
+      });
+
+      roomCards.appendChild(card);
+    });
+  });
+
+  function submitReservation() {
+    const duration = document.getElementById("duration").value;
+
+    if (selectedRoom === null) {
+        alert("Please select a room.");
+        return;
+    }
+
+    if (!duration || duration <= 0) {
+        alert("Enter a valid number of months.");
+        return;
+    }
+
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const houseIndex = localStorage.getItem("selectedHouse");
+
+    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
+    const house = houses[houseIndex];
+
+    if (!house) {
+        alert("House data not found.");
+        return;
+    }
+
+    const room = house.rooms[selectedRoom];
+
+    const reservation = {
+        id: "r_" + Date.now(),
+
+        ownerId: house.ownerId || null,
+
+        houseId: house.id,
+        houseName: house.houseName,
+
+        roomId: room.id || ("room_" + selectedRoom),
+        roomName: room.roomName || room.roomType || room.name || "Room",
+        price: room.roomPrice || room.price,
+
+        customerId: user.id,
+        customerName: `${user.firstName} ${user.lastName}`,
+        customerEmail: user.email,
+        customerPhone: user.phone,
+
+        months: duration,
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: "",
+        paymentMethod: null,
+        status: "pending"
+    };
+
+    let reservations = JSON.parse(localStorage.getItem("reservations") || "[]");
+    reservations.push(reservation);
+    localStorage.setItem("reservations", JSON.stringify(reservations));
+
+    window.location.href = "customerPayment.html";
+  }
+
+  function goHome() {
+    window.location.href = "Customerprofile.html";
+  }
+
+  function goDashboard() {
+    window.location.href = "customerDashboard.html";
+  }
+
+  function goReservations() {
+    window.location.href = "customerReservations.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "landingpage.html";
+  }
+</script>
+</body>
+</html>

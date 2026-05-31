@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservation</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Ownerprofilee.css">
+<link rel="stylesheet" href="customerReserve.css">
+<style>
+  .payment-option-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid #eee;
+  }
+
+  .payment-option-section h2 {
+    margin-bottom: 16px;
+  }
+
+  .payment-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .payment-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .payment-card:hover {
+    border-color: #FFA726;
+    transform: translateY(-2px);
+  }
+
+  .payment-card.selected {
+    border-color: #FFA726;
+    background: #FFF8F0;
+  }
+
+  .payment-card .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .payment-card h3 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .payment-card .amount {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #FFA726;
+    margin-bottom: 8px;
+  }
+
+  .payment-card p {
+    font-size: 0.82rem;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  .payment-card.selected h3 {
+    color: #FFA726;
+  }
+
+  .notice-box {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .notice-box.reservation {
+    background: #FFF3E0;
+    border: 1px solid #FFB74D;
+    color: #E65100;
+  }
+
+  .notice-box.full {
+    background: #E8F5E9;
+    border: 1px solid #66BB6A;
+    color: #1B5E20;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+  <nav class="nav-links">
+    <span onclick="goProfile()" class="booking">Profile</span>
+    <span class="booking" onclick="goDashboard()">Dashboard</span>
+    <span class="custolist" onclick="goReservations()">Reservations</span>
+  </nav>
+  <div class="logout-btn" onclick="logout()">Log Out</div>
+</header>
+
+<main class="reserve-container">
+
+  <h1 class="title">Reservation Form</h1>
+
+  <!-- CUSTOMER INFO -->
+  <section class="info-section">
+    <h2>Your Information</h2>
+    <label>Full Name</label>
+    <input type="text" id="fullName" readonly>
+    <label>Contact Number</label>
+    <input type="text" id="contactNumber" readonly>
+  </section>
+
+  <!-- HOUSE INFO -->
+  <section class="info-section">
+    <h2>House Details</h2>
+    <div id="houseInfo"></div>
+  </section>
+
+  <!-- ROOM SELECTION -->
+  <section class="rooms-section">
+    <h2>Select a Room</h2>
+    <div id="roomCards" class="rooms-grid"></div>
+  </section>
+
+  <!-- DURATION -->
+  <section class="duration-section">
+    <h2>Duration of Stay</h2>
+    <label>Months</label>
+    <input type="number" id="duration" min="1"
+      placeholder="Enter number of months">
+  </section>
+
+  <!-- PAYMENT OPTION -->
+  <section class="payment-option-section">
+    <h2>Payment Option</h2>
+    <p style="color:#888; font-size:0.9rem; margin-bottom:16px;">
+      Choose how you want to proceed with this reservation.
+    </p>
+
+    <div class="payment-options">
+
+      <!-- RESERVATION FEE -->
+      <div class="payment-card" id="cardReservation"
+           onclick="selectPaymentOption('reservation')">
+        <div class="icon">🔍</div>
+        <h3>Reservation Fee Only</h3>
+        <div class="amount">₱50.00</div>
+        <p>
+          Pay a small reservation fee to hold the room while you visit
+          and check it in person first before committing.
+        </p>
+      </div>
+
+      <!-- FULL PAYMENT -->
+      <div class="payment-card" id="cardFull"
+           onclick="selectPaymentOption('full')">
+        <div class="icon">✅</div>
+        <h3>Full Payment</h3>
+        <div class="amount" id="fullPaymentAmount">₱0.00</div>
+        <p>
+          Pay the full amount for your entire stay upfront.
+          Your room will be confirmed and reserved immediately.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- NOTICE BOXES -->
+    <div class="notice-box reservation" id="noticeReservation">
+      ⚠️ <strong>Note:</strong> The ₱50 reservation fee is
+      <strong>non-refundable</strong>. After visiting the room,
+      you will need to pay the remaining balance to fully confirm
+      your stay. The owner may release the room if you don't
+      follow up within 3 days.
+    </div>
+
+    <div class="notice-box full" id="noticeFull">
+      ✅ <strong>Great choice!</strong> Full payment confirms your
+      room immediately. The owner will be notified and your
+      reservation will be marked as <strong>confirmed</strong>
+      right away.
+    </div>
+
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="info-section" id="summarySection" style="display:none;">
+    <h2>Reservation Summary</h2>
+    <div id="summaryContent"></div>
+  </section>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="submitReservation()">
+      Proceed to Payment
+    </button>
+  </div>
+
+</main>
+</div>
+
+<script>
+  let selectedRoomData = null;
+  let selectedPaymentOption = null;
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const houseData = JSON.parse(
+      localStorage.getItem("selectedRoom") || "null"
+    );
+
+    // Fill user info
+    if (user) {
+      document.getElementById("fullName").value =
+        `${user.first_name} ${user.last_name}`;
+      document.getElementById("contactNumber").value = user.phone || "";
+    }
+
+    if (!houseData) {
+      document.getElementById("roomCards").innerHTML =
+        "<p>No house selected. Please go back and select a house.</p>";
+      return;
+    }
+
+    // Show house info
+    document.getElementById("houseInfo").innerHTML = `
+      <p><strong>House:</strong> ${houseData.title || "Unknown"}</p>
+      <p><strong>Location:</strong> ${houseData.location || "No location"}</p>
+      <p><strong>Description:</strong> 
+        ${houseData.description || "No description"}</p>
+    `;
+
+    // Load rooms
+    const roomCards = document.getElementById("roomCards");
+    const rooms = houseData.rooms_data
+      ? JSON.parse(houseData.rooms_data)
+      : [];
+
+    if (!rooms.length) {
+      roomCards.innerHTML = "<p>No rooms available for this house.</p>";
+      return;
+    }
+
+    rooms.forEach((room) => {
+      if (room.roomAvailability &&
+          room.roomAvailability.toLowerCase() === "occupied") return;
+
+      const card = document.createElement("div");
+      card.classList.add("room-card");
+
+      const imgHtml = room.imageDataUrl
+        ? `<img src="${room.imageDataUrl}"
+             style="width:100%;border-radius:8px;margin-bottom:8px;">`
+        : "";
+
+      card.innerHTML = `
+        ${imgHtml}
+        <p class="room-name"><b>${room.roomType || "Room"}</b></p>
+        <p>Room No.: ${room.roomNumber || "-"}</p>
+        <p>Price: ₱${room.roomPrice || 0} / month</p>
+        <p>Capacity: ${room.roomCapacity || "-"} person(s)</p>
+        <p class="room-desc">${room.roomDescription || ""}</p>
+      `;
+
+      card.addEventListener("click", () => {
+        selectedRoomData = room;
+
+        document.querySelectorAll(".room-card")
+          .forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
+
+        // Update full payment amount
+        const price = parseFloat(room.roomPrice) || 0;
+        const months = parseInt(
+          document.getElementById("duration").value
+        ) || 1;
+        document.getElementById("fullPaymentAmount").textContent =
+          `₱${(price * months).toLocaleString("en-PH")}`;
+
+        updateSummary();
+      });
+
+      roomCards.appendChild(card);
+    });
+
+    // Update full payment when months change
+    document.getElementById("duration").addEventListener("input", () => {
+      if (selectedRoomData) {
+        const price = parseFloat(selectedRoomData.roomPrice) || 0;
+        const months = parseInt(
+          document.getElementById("duration").value
+        ) || 1;
+        document.getElementById("fullPaymentAmount").textContent =
+          `₱${(price * months).toLocaleString("en-PH")}`;
+        updateSummary();
+      }
+    });
+  });
+
+  function selectPaymentOption(option) {
+    selectedPaymentOption = option;
+
+    // Update card styles
+    document.getElementById("cardReservation").classList.remove("selected");
+    document.getElementById("cardFull").classList.remove("selected");
+    document.getElementById("noticeReservation").style.display = "none";
+    document.getElementById("noticeFull").style.display = "none";
+
+    if (option === "reservation") {
+      document.getElementById("cardReservation").classList.add("selected");
+      document.getElementById("noticeReservation").style.display = "block";
+    } else {
+      document.getElementById("cardFull").classList.add("selected");
+      document.getElementById("noticeFull").style.display = "block";
+    }
+
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const summarySection = document.getElementById("summarySection");
+    const summaryContent = document.getElementById("summaryContent");
+
+    if (!selectedRoomData || !selectedPaymentOption) {
+      summarySection.style.display = "none";
+      return;
+    }
+
+    const price = parseFloat(selectedRoomData.roomPrice) || 0;
+    const months = parseInt(
+      document.getElementById("duration").value
+    ) || 1;
+    const total = price * months;
+    const amountToPay = selectedPaymentOption === "reservation"
+      ? 50
+      : total;
+
+    summarySection.style.display = "block";
+    summaryContent.innerHTML = `
+      <table style="width:100%; font-size:0.95rem; border-collapse:collapse;">
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 0; color:#888;">Room Type</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ${selectedRoomData.roomType || "Room"}
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 0; color:#888;">Room Number</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ${selectedRoomData.roomNumber || "-"}
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 0; color:#888;">Monthly Price</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ₱${price.toLocaleString("en-PH")}
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 0; color:#888;">Duration</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ${months} month(s)
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:8px 0; color:#888;">Total Amount</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ₱${total.toLocaleString("en-PH")}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0; color:#FFA726; font-weight:700;">
+            Amount to Pay Now
+          </td>
+          <td style="padding:8px 0; font-weight:700; color:#FFA726;
+            font-size:1.2rem; text-align:right;">
+            ₱${amountToPay.toLocaleString("en-PH")}
+          </td>
+        </tr>
+        ${selectedPaymentOption === "reservation" ? `
+        <tr>
+          <td style="padding:8px 0; color:#888;">Remaining Balance</td>
+          <td style="padding:8px 0; font-weight:600; text-align:right;">
+            ₱${(total - 50).toLocaleString("en-PH")}
+          </td>
+        </tr>` : ""}
+      </table>
+    `;
+  }
+
+  async function submitReservation() {
+    const duration = document.getElementById("duration").value;
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const token = localStorage.getItem("token");
+    const houseData = JSON.parse(localStorage.getItem("selectedRoom"));
+
+    if (!selectedRoomData) {
+      alert("Please select a room first.");
+      return;
+    }
+
+    if (!duration || duration <= 0) {
+      alert("Please enter a valid number of months.");
+      return;
+    }
+
+    if (!selectedPaymentOption) {
+      alert("Please select a payment option.");
+      return;
+    }
+
+    if (!user) {
+      alert("Please log in first.");
+      window.location.href = "Selectingpage.html";
+      return;
+    }
+
+    const price = parseFloat(selectedRoomData.roomPrice) || 0;
+    const months = parseInt(duration);
+    const total = price * months;
+    const amountToPay = selectedPaymentOption === "reservation" ? 50 : total;
+
+    const checkIn = new Date().toISOString().slice(0, 10);
+    const checkOut = new Date();
+    checkOut.setMonth(checkOut.getMonth() + months);
+    const checkOutStr = checkOut.toISOString().slice(0, 10);
+
+    try {
+      const response = await fetch('https://housefinds-backend.up.railway.app/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          room_id: houseData.id,
+          check_in: checkIn,
+          check_out: checkOutStr,
+          months: months,
+          room_name: selectedRoomData.roomType || "Room",
+          room_number: selectedRoomData.roomNumber || "-",
+          price: price,
+          house_name: houseData.title || "Unknown",
+          owner_id: houseData.owner_id,
+          payment_type: selectedPaymentOption,
+          amount_to_pay: amountToPay,
+          total_amount: total
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save booking info for payment page
+        localStorage.setItem("currentBooking", JSON.stringify({
+          bookingId: data.id,
+          houseName: houseData.title,
+          roomType: selectedRoomData.roomType,
+          roomNumber: selectedRoomData.roomNumber,
+          price: price,
+          months: months,
+          checkIn: checkIn,
+          checkOut: checkOutStr,
+          total: total,
+          paymentType: selectedPaymentOption,
+          amountToPay: amountToPay,
+          remainingBalance: selectedPaymentOption === "reservation"
+            ? total - 50
+            : 0
+        }));
+
+        alert("Reservation submitted! Proceeding to payment.");
+        window.location.href = "customerPayment.html";
+      } else {
+        alert("Error: " + data.error);
+      }
+
+    } catch (err) {
+      alert("Could not connect to server. Make sure backend is running!");
+      console.error(err);
+    }
+  }
+
+  function goProfile() { window.location.href = "Customerprofile.html"; }
+  function goDashboard() { window.location.href = "customerDashboard.html"; }
+  function goReservations() {
+    window.location.href = "customerReservations.html";
+  }
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.location.href = "landingpage.html";
+  }
+</script>
+</body>
+</html>

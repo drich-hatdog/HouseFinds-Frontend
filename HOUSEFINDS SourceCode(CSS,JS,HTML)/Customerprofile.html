@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile</title>
+
+  <link rel="stylesheet" href="Customerprofiles.css">
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+
+    <nav class="nav-links">
+      <span class="booking" onclick="goReservations()">Reservation</span>
+      <span class="custolist" onclick="goDashboard()">Dashboard</span>
+
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="Customerprofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettings.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <!-- ORANGE WELCOME BAR (same style) -->
+  <div class="orange-bar">
+    <div class="welcome">Welcome back, <span id="welcomeName">User</span> !</div>
+  </div>
+
+  <!-- MAIN PROFILE LAYOUT (copied style from owner) -->
+  <main class="profile-wrapper">
+    <section class="profile-main">
+      <!-- LEFT: photo -->
+      <div class="profile-photo-wrap">
+        <div class="profile-photo-card">
+          <img class="profile-image" src="https://placehold.co/441x479" alt="Profile">
+        </div>
+        <p class="profile-hint">Verified Customer.</p>
+      </div>
+
+      <!-- RIGHT: details -->
+      <div class="profile-details">
+        <div class="profile-header-row">
+          <div>
+            <h1 class="name">NameoftheUser</h1>
+            <div class="pill">
+              <span class="role-text">Customer</span>
+            </div>
+          </div>
+          <div class="icon-wrap">
+            <img class="icon" src="LogoProfile.png" alt="Logo Icon">
+          </div>
+        </div>
+
+        <p class="profile-subtitle">
+          View and manage your account information.
+        </p>
+
+        <h3 class="about-title">Profile information</h3>
+        <div class="about-card">
+          <div class="about-info">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (same as owner) -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-box">
+        <img src="logofindsw.png" class="Logowhite" alt="HouseFinds White Logo">
+        <p class="footer-text">
+          HouseFinds helps UEP students easily find and book safe, affordable,
+          and convenient boarding houses through verified and user-friendly listings.
+        </p>
+      </div>
+      <div class="footer-box">
+        <h4 class="footer-heading">Useful links</h4>
+        <a href="#features">Listing</a>
+        <a href="#about">About Us</a>
+        <a href="#hero">Contact Us</a>
+      </div>
+      <div class="footer-box">
+        <h4 class="footer-heading">Get in Touch</h4>
+        <p>Zone 0, Catarman N. Samar</p>
+        <p>HouseFinds@gmail.com</p>
+        <p>+63 995 - 990 - 7215</p>
+      </div>
+      <div class="footer-box">
+        <h4 class="footer-heading">Newsletter/Message</h4>
+        <input type="text" class="newsletter-input" placeholder="Your Email">
+        <button class="newsletter-btn">Submit</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  function goHome() {
+    window.location.href = "Customerprofile.html";
+  }
+
+  function goReservations() {
+    window.location.href = "customerReservations.html";
+  }
+
+  function goDashboard() {
+    window.location.href = "customerDashboard.html";
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!user) return;
+
+    const fullName = (user.firstName || "") + " " + (user.lastName || "");
+    const displayName = fullName.trim() || "User";
+
+    // profile image
+    document.querySelector(".profile-image").src =
+      user.profileImage || "https://placehold.co/441x479";
+
+    // name + role
+    document.querySelector(".name").textContent = displayName;
+    document.querySelector(".role-text").textContent = "Customer";
+
+    // welcome bar name
+    const welcomeSpan = document.getElementById("welcomeName");
+    if (welcomeSpan) {
+      welcomeSpan.textContent = user.firstName || displayName;
+    }
+
+    // about info → same grid style as owner
+    const aboutInfo = document.querySelector(".about-info");
+    aboutInfo.innerHTML = `
+      <div class="about-grid">
+        <div class="about-row">
+          <span class="about-label">Middle name</span>
+          <span class="about-value">${user.middleName || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Address</span>
+          <span class="about-value">${user.address || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Email</span>
+          <span class="about-value">${user.email || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Username</span>
+          <span class="about-value">${user.username || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Birthdate</span>
+          <span class="about-value">${user.birthdate || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Contact</span>
+          <span class="about-value">${user.phone || "-"}</span>
+        </div>
+        <div class="about-row">
+          <span class="about-label">Gender</span>
+          <span class="about-value">${user.gender || "-"}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      allUsers = allUsers.filter(user => user.email !== loggedInUser.email);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      localStorage.removeItem("loggedInUser");
+
+      alert("Account deleted successfully.");
+      window.location.href = "landingpage.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "landingpage.html";
+  }
+</script>
+
+</body>
+</html>

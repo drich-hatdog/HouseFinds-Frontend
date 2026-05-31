@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+  background-color: #eef1ff;
+}
+
+.createbutton:hover,
+.custolist:hover,
+.booking:hover {
+  color: #122CD7;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+.logo {
+  height: 45px;
+}
+
+.logoutop {
+  background: #1f23fc;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.logoutop:hover {
+  background: #1f23fc;
+}
+
+/* PAGE CONTENT */
+.payment-container {
+  padding: 30px;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: #3f51b5;
+  margin-bottom: 20px;
+}
+
+/* PAYMENT METHODS */
+.payment-methods {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.method-card {
+  width: 250px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #d1d3e6;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.method-card:hover {
+  transform: translateY(-4px);
+  border-color: #3f51b5;
+}
+
+.method-card.selected {
+  border: 2px solid #3f51b5;
+  background-color: #eef1ff;
+}
+
+.method-img {
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.method-card h3 {
+  color: #3f51b5;
+  margin-top: 6px;
+}
+
+/* PAY BUTTON */
+.pay-wrap {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.pay-btn {
+  padding: 12px 24px;
+  background-color: #3f51b5;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.pay-btn:hover {
+  background-color: #2d3fa4;
+}

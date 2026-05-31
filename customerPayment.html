@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="customerPayment.css">
+<link rel="stylesheet" href="Ownerprofilee.css">
+<style>
+  .booking-summary {
+    max-width: 500px;
+    margin: 0 auto 24px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  .booking-summary h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: #333;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .label { color: #888; }
+  .summary-row.total {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #333;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 2px solid #eee;
+    border-bottom: none;
+  }
+  .summary-row.amount-due {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #FFA726;
+  }
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loading-overlay.active {
+    display: flex;
+  }
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top-color: #FFA726;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-text {
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .method-card.gcash { border: 2px solid transparent; }
+  .method-card.gcash.selected { border-color: #0070E0; }
+  .method-card.maya.selected { border-color: #006B5B; }
+  .method-card.cash.selected { border-color: #FFA726; }
+  .paymongo-badge {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: #999;
+  }
+  .paymongo-badge span {
+    color: #0070E0;
+    font-weight: 600;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Redirecting to payment...</div>
+</div>
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+  <nav class="nav-links">
+    <span onclick="goProfile()" class="booking">Profile</span>
+    <span class="booking" onclick="goDashboard()">Dashboard</span>
+    <span class="custolist" onclick="goReservations()">Reservations</span>
+  </nav>
+  <div class="logoutop" onclick="logout()">Logout</div>
+</header>
+
+<main class="payment-container">
+
+  <h1 class="title">Choose Payment Method</h1>
+
+  <!-- BOOKING SUMMARY -->
+  <div class="booking-summary">
+    <h2>Booking Summary</h2>
+    <div class="summary-row">
+      <span class="label">House</span>
+      <span id="summaryHouse">-</span>
+    </div>
+    <div class="summary-row">
+      <span class="label">Room</span>
+      <span id="summaryRoom">-</span>
+    </div>
+    <div class="summary-row">
+      <span class="label">Check In</span>
+      <span id="summaryCheckIn">-</span>
+    </div>
+    <div class="summary-row">
+      <span class="label">Check Out</span>
+      <span id="summaryCheckOut">-</span>
+    </div>
+    <div class="summary-row">
+      <span class="label">Duration</span>
+      <span id="summaryMonths">-</span>
+    </div>
+    <div class="summary-row total">
+      <span class="label">Total Amount</span>
+      <span id="summaryTotal">-</span>
+    </div>
+    <div class="summary-row amount-due">
+      <span class="label">Amount to Pay Now</span>
+      <span id="summaryAmountDue">-</span>
+    </div>
+    <div class="summary-row" id="balanceRow" style="display:none;">
+      <span class="label">Remaining Balance</span>
+      <span id="summaryBalance" style="color:#e65100;">-</span>
+    </div>
+  </div>
+
+  <!-- PAYMENT METHODS -->
+  <section class="payment-methods">
+    <div class="method-card gcash"
+      onclick="selectMethod('GCash', this)">
+      <img src="GCash logo horizontal.png" class="method-img">
+      <h3>GCash</h3>
+      <p style="font-size:0.75rem; color:#888; margin-top:4px;">
+        via PayMongo
+      </p>
+    </div>
+    <div class="method-card maya"
+      onclick="selectMethod('Maya', this)">
+      <img src="maya.jpg" class="method-img">
+      <h3>Maya</h3>
+      <p style="font-size:0.75rem; color:#888; margin-top:4px;">
+        via PayMongo
+      </p>
+    </div>
+    <div class="method-card cash"
+      onclick="selectMethod('Cash', this)">
+      <img src="cashpayment.png" class="method-img">
+      <h3>Cash</h3>
+      <p style="font-size:0.75rem; color:#888; margin-top:4px;">
+        Pay to owner directly
+      </p>
+    </div>
+  </section>
+
+  <div class="paymongo-badge">
+    🔒 GCash & Maya payments secured by <span>PayMongo</span>
+  </div>
+
+  <div class="pay-wrap">
+    <button class="pay-btn" onclick="completePayment()">
+      Pay Now
+    </button>
+  </div>
+
+</main>
+
+<script>
+  let selectedMethod = null;
+  let currentBooking = null;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const booking = JSON.parse(
+      localStorage.getItem("currentBooking") || "null"
+    );
+
+    if (!booking) {
+      alert("No booking found. Please make a reservation first.");
+      window.location.href = "customerDashboard.html";
+      return;
+    }
+
+    currentBooking = booking;
+
+    // Fill summary
+    document.getElementById("summaryHouse").textContent =
+      booking.houseName || "-";
+    document.getElementById("summaryRoom").textContent =
+      `${booking.roomType || "Room"} (${booking.roomNumber || "-"})`;
+    document.getElementById("summaryCheckIn").textContent =
+      booking.checkIn || "-";
+    document.getElementById("summaryCheckOut").textContent =
+      booking.checkOut || "-";
+    document.getElementById("summaryMonths").textContent =
+      `${booking.months || 1} month(s)`;
+    document.getElementById("summaryTotal").textContent =
+      `₱${Number(booking.total || 0).toLocaleString("en-PH")}`;
+    document.getElementById("summaryAmountDue").textContent =
+      `₱${Number(booking.amountToPay || 0).toLocaleString("en-PH")}`;
+
+    if (booking.remainingBalance && booking.remainingBalance > 0) {
+      document.getElementById("balanceRow").style.display = "flex";
+      document.getElementById("summaryBalance").textContent =
+        `₱${Number(booking.remainingBalance).toLocaleString("en-PH")}`;
+    }
+  });
+
+  function selectMethod(method, cardDiv) {
+    selectedMethod = method;
+    document.querySelectorAll(".method-card")
+      .forEach(card => card.classList.remove("selected"));
+    cardDiv.classList.add("selected");
+  }
+
+  async function completePayment() {
+    if (!selectedMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    if (!currentBooking) {
+      alert("No booking found.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    // -------- CASH PAYMENT --------
+    if (selectedMethod === 'Cash') {
+      try {
+        const response = await fetch(
+          `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            status: 'pending',
+            payment_method: 'Cash'
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.removeItem("currentBooking");
+          localStorage.removeItem("selectedRoom");
+
+          alert(
+            `Cash payment noted!\n\n` +
+            `Please pay the owner directly.\n` +
+            `Your booking is pending owner confirmation.` +
+            (currentBooking.remainingBalance > 0
+              ? `\n\nRemember: Remaining balance of ₱${
+                  Number(currentBooking.remainingBalance)
+                  .toLocaleString("en-PH")} to pay to owner.`
+              : "")
+          );
+
+          window.location.href = "customerReservations.html";
+        } else {
+          alert("Error: " + data.error);
+        }
+
+      } catch (err) {
+        alert("Could not connect to server. Make sure backend is running!");
+        console.error(err);
+      }
+      return;
+    }
+
+    // -------- GCASH / MAYA via PAYMONGO --------
+    try {
+      // Show loading spinner
+      document.getElementById("loadingOverlay").classList.add("active");
+
+      const description =
+        `HouseFinds - ${currentBooking.houseName} ` +
+        `(${currentBooking.roomType}) - ` +
+        `${currentBooking.months} month(s)`;
+
+      const response = await fetch(
+        `https://housefinds-backend.up.railway.app/api/bookings/pay/${currentBooking.bookingId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          amount: currentBooking.amountToPay,
+          description: description,
+          booking_id: currentBooking.bookingId,
+          payment_method: selectedMethod
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save payment method to database
+        await fetch(
+          `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            status: 'pending',
+            payment_method: selectedMethod
+          })
+        });
+
+        localStorage.removeItem("currentBooking");
+        localStorage.removeItem("selectedRoom");
+
+        // Redirect to PayMongo checkout
+        window.location.href = data.payment_url;
+
+      } else {
+        document.getElementById("loadingOverlay")
+          .classList.remove("active");
+        alert("Payment error: " + data.error);
+      }
+
+    } catch (err) {
+      document.getElementById("loadingOverlay")
+        .classList.remove("active");
+      alert("Could not connect to server. Make sure backend is running!");
+      console.error(err);
+    }
+  }
+
+  function goProfile() {
+    window.location.href = "Customerprofile.html";
+  }
+
+  function goDashboard() {
+    window.location.href = "customerDashboard.html";
+  }
+
+  function goReservations() {
+    window.location.href = "customerReservations.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.location.href = "landingpage.html";
+  }
+</script>
+
+</body>
+</html>

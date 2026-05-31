@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner Houses - HouseFinds</title>
+  <link rel="stylesheet" href="Ownerprofilee.css">
+  <link rel="stylesheet" href="OwnerHouses.css">
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerCustomerList.html.html'" class="custolist">Customer list</span>
+      <span onclick="window.location.href='OwnerBooking.html'" class="booking">Booking</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <div class="houses-wrapper">
+      <div class="create-placeholder" id="emptyCard"
+           onclick="window.location.href='CreateHouse.html'">
+        <span>( Click here to add a room )</span>
+      </div>
+      <div id="housesList"></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    loadRooms();
+  });
+
+  async function loadRooms() {
+    const housesList = document.getElementById("housesList");
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const token = localStorage.getItem("token");
+
+    if (!user || user.role !== "owner") {
+      window.location.href = "Selectingpage.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://housefinds-backend.up.railway.app/api/rooms/owner/${user.id}`,
+        { headers: { 'Authorization': 'Bearer ' + token } }
+      );
+
+      const rooms = await response.json();
+
+      if (!rooms.length) {
+        housesList.innerHTML = 
+          "<p style='padding:16px;color:#888;'>No rooms added yet. Click above to add one!</p>";
+        return;
+      }
+
+      rooms.forEach(room => {
+        const card = document.createElement("div");
+        card.className = "house-card";
+
+        const imgSrc = room.image_url && room.image_url.trim() !== ""
+          ? room.image_url
+          : "https://placehold.co/600x400";
+
+        card.innerHTML = `
+          <img class="house-img" src="${imgSrc}" alt="${room.title}">
+          <div class="house-info">
+            <h3>${room.title}</h3>
+            <p class="line">₱${room.price} / month</p>
+            <p class="line">${room.location || 'No location'}</p>
+            <p class="line">Status: <strong>${room.status}</strong></p>
+          </div>
+          <div class="details-overlay">
+            <div>
+              <div class="details-title">Description</div>
+              <div class="details-text">
+                ${room.description || "No description provided."}
+              </div>
+            </div>
+            <div class="details-bottom">
+              <button class="view-rooms-btn"
+                onclick="event.stopPropagation(); editRoom(${room.id})">
+                Edit Room
+              </button>
+              <button class="view-rooms-btn" style="background:#e53935;"
+                onclick="event.stopPropagation(); deleteRoom(${room.id})">
+                Delete
+              </button>
+            </div>
+          </div>
+        `;
+
+        housesList.appendChild(card);
+      });
+
+    } catch (err) {
+      housesList.innerHTML = 
+        "<p style='color:red;padding:16px;'>Could not load rooms. Make sure server is running.</p>";
+      console.error(err);
+    }
+  }
+
+  function editRoom(id) {
+    window.location.href = "CreateHouse.html?id=" + id;
+  }
+
+  async function deleteRoom(id) {
+    if (!confirm("Are you sure you want to delete this room?")) return;
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`https://housefinds-backend.up.railway.app/api/rooms/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      if (response.ok) {
+        alert("Room deleted successfully!");
+        location.reload();
+      } else {
+        alert("Failed to delete room.");
+      }
+    } catch (err) {
+      alert("Could not connect to server.");
+      console.error(err);
+    }
+  }
+
+  async function deleteAccount() {
+    if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`https://housefinds-backend.up.railway.app/api/auth/delete/${user.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("token");
+        alert("Account deleted successfully.");
+        window.location.href = "landingpage.html";
+      }
+    } catch (err) {
+      alert("Could not connect to server.");
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.location.href = "landingpage.html";
+  }
+</script>
+
+</body>
+</html>

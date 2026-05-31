@@ -1,0 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+  background-color: #f3f5ff;
+}
+
+.Home:hover,
+.Dashboard:hover,
+.Reservations:hover {
+  color: #1f23fc;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.action-btn { padding:6px 10px; border-radius:8px; font-size:13px; margin-right:6px; cursor:pointer; border:none; }
+  .btn-pay { background:#1976d2; color:#fff; }
+  .btn-sms { background:#00a86b; color:#fff; }
+  .reservation-table { width:100%; border-collapse:collapse; margin-top:18px; }
+  .reservation-table th, .reservation-table td { padding:10px 12px; border-bottom:1px solid #eee; text-align:left; }
+  .status-pending { color:#856404; font-weight:600; }
+  .status-paid { color:#155724; font-weight:600; }
+  .status-accepted { color:#0b6623; font-weight:600; }
+  .status-declined { color:#721c24; font-weight:600; }
+  .muted { color:#666; font-size:13px; }
+  .log-area { margin-top:18px; font-size:13px; color:#444; }
+  .small-note { font-size:12px; color:#777; margin-top:8px; }
+
+.logout-btn {
+  background: #1f23fc;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.logout-btn:hover {
+  background: #1f23fc;
+}
+
+.reservation-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* Table */
+
+.reservation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.reservation-table th,
+.reservation-table td {
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f5;
+}
+
+.reservation-table th {
+  background: #f7f7fb;
+  font-weight: 600;
+  color: #333;
+}
+
+.reservation-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status colors */
+
+.status-pending {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.status-paid {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.status-accepted {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+.status-declined {
+  color: #d32f2f;
+  font-weight: 700;
+}

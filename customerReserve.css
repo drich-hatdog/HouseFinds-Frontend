@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+  background-color: #f3f5ff;
+}
+
+.createbutton:hover,
+.custolist:hover,
+.booking:hover {
+  color: #122CD7;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn {
+  background: #122CD7;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.logout-btn:hover {
+  background: #122CD7;
+}
+
+.reserve-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+/* Sections */
+
+.info-section,
+.rooms-section,
+.duration-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 18px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.info-section h2,
+.rooms-section h2,
+.duration-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.info-section label,
+.duration-section label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.info-section input,
+.duration-section input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d0d4ff;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.info-section input:focus,
+.duration-section input:focus {
+  border-color: #ff9800;
+  box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.18);
+}
+
+/* Rooms */
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.room-card {
+  background: #fafbff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #dde2ff;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.room-card:hover {
+  border-color: #ff9800;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.room-card.selected {
+  border-color: #ff9800;
+  background: #fff7e6;
+}
+
+.room-name {
+  margin-bottom: 4px;
+}
+
+.room-card p {
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.room-desc {
+  margin-top: 4px;
+  color: #666;
+}
+
+/* Submit */
+
+.submit-wrap {
+  text-align: right;
+  margin-top: 4px;
+}
+
+.submit-btn {
+  background-color: #0011ff;
+  color: white;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(47, 26, 243, 0.4);
+}
+
+.submit-btn:hover {
+  background-color: #0019fb;
+}

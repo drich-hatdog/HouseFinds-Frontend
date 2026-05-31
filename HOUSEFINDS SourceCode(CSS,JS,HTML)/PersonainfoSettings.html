@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Profile</title>
+
+  <!-- Customer edit profile styles (make this match owner CSS design) -->
+  <link rel="stylesheet" href="personainfosetting.css" />
+
+  <script defer>
+    function loadEditProfile() {
+      const savedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!savedUser) return;
+
+      document.getElementById("firstName").value = savedUser.firstName || "";
+      document.getElementById("middleName").value = savedUser.middleName || "";
+      document.getElementById("lastName").value = savedUser.lastName || "";
+      document.getElementById("address").value = savedUser.address || "";
+      document.getElementById("email").value = savedUser.email || "";
+      document.getElementById("username").value = savedUser.username || "";
+      document.getElementById("password").value = savedUser.password || "";
+      document.getElementById("birthdate").value = savedUser.birthdate || "";
+      document.getElementById("contact").value = savedUser.phone || "";
+      document.getElementById("gender").value = savedUser.gender || "Male";
+      document.getElementById("profile-pic-preview").src =
+        savedUser.profileImage || "https://placehold.co/300x300";
+
+      const editPictureInput = document.getElementById("edit-picture");
+      if (editPictureInput) {
+        editPictureInput.addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById("profile-pic-preview").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    }
+
+    function saveProfile(e) {
+      e.preventDefault();
+
+      const savedUser = JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+      savedUser.firstName = document.getElementById("firstName").value;
+      savedUser.middleName = document.getElementById("middleName").value;
+      savedUser.lastName = document.getElementById("lastName").value;
+      savedUser.address = document.getElementById("address").value;
+      savedUser.email = document.getElementById("email").value;
+      savedUser.username = document.getElementById("username").value;
+      savedUser.password = document.getElementById("password").value;
+      savedUser.birthdate = document.getElementById("birthdate").value;
+      savedUser.phone = document.getElementById("contact").value;
+      savedUser.gender = document.getElementById("gender").value;
+      savedUser.profileImage = document.getElementById("profile-pic-preview").src;
+
+      // Save updated user to localStorage
+      localStorage.setItem("loggedInUser", JSON.stringify(savedUser));
+
+      // Update in allUsers array if exists
+      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      const userIndex = allUsers.findIndex(u => u.email === savedUser.email);
+      if (userIndex !== -1) {
+        allUsers[userIndex] = savedUser;
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
+      }
+
+      alert("Profile updated!");
+      // Go back to customer profile page
+      window.location.href = "Customerprofile.html";
+    }
+  </script>
+</head>
+<body onload="loadEditProfile()">
+  <div class="page-wrapper">
+    <div class="card">
+
+      <!-- Small, aesthetic header (same style as owner edit) -->
+      <header class="header">
+        <h1 class="page-title">Edit profile</h1>
+        <p class="page-subtitle">Update your basic information.</p>
+      </header>
+
+      <main class="main-layout">
+        <!-- LEFT: PROFILE PICTURE -->
+        <aside class="profile-column">
+          <div class="avatar-wrapper">
+            <img
+              id="profile-pic-preview"
+              src="https://placehold.co/300x300"
+              alt="Profile picture preview"
+            />
+          </div>
+          <label for="edit-picture" class="edit-picture">Edit picture</label>
+          <input type="file" id="edit-picture" hidden accept="image/*" />
+        </aside>
+
+        <!-- RIGHT: FORM (LANDSCAPE) -->
+        <section class="form-column">
+          <form class="profile-form" onsubmit="saveProfile(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="First name" />
+              </div>
+
+              <div class="field">
+                <label for="middleName">Middle Name</label>
+                <input type="text" id="middleName" placeholder="Middle name" />
+              </div>
+
+              <div class="field">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Last name" />
+              </div>
+
+              <div class="field full-width">
+                <label for="address">Address</label>
+                <input type="text" id="address" placeholder="Street, City, Province" />
+              </div>
+
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="you@example.com" />
+              </div>
+
+              <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Username" />
+              </div>
+
+              <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Password" />
+              </div>
+
+              <div class="field">
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" />
+              </div>
+
+              <div class="field">
+                <label for="contact">Contact Number</label>
+                <input type="tel" id="contact" placeholder="09XXXXXXXXX" />
+              </div>
+
+              <div class="field">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="btn secondary"
+                onclick="window.location.href='Customerprofile.html'"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn primary">
+                Save changes
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

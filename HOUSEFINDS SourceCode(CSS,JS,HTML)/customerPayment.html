@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="customerPayment.css">
+<link rel="stylesheet" href="Ownerprofilee.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+
+  <nav class="nav-links">
+    <span class="booking" onclick="goDashboard()">Dashboard</span>
+    <span class="custolist" onclick="goReservations()">Reservations</span>
+  </nav>
+
+  <div class="logoutop" onclick="logout()">Logout</div>
+</header>
+
+<main class="payment-container">
+
+  <h1 class="title">Choose Payment Method</h1>
+
+  <section class="payment-methods">
+
+    <div class="method-card" onclick="selectMethod('GCash', this)">
+      <img src="GCash logo horizontal.png" class="method-img">
+      <h3>GCash</h3>
+    </div>
+
+    <div class="method-card" onclick="selectMethod('PayPal', this)">
+      <img src="maya.jpg" class="method-img">
+      <h3>Maya</h3>
+    </div>
+
+    <div class="method-card" onclick="selectMethod('Cash', this)">
+      <img src="cashpayment.png" class="method-img">
+      <h3>Cash</h3>
+    </div>
+
+  </section>
+
+  <div class="pay-wrap">
+    <button class="pay-btn" onclick="completePayment()">Pay Now</button>
+  </div>
+
+</main>
+
+<script>
+let selectedMethod = null;
+
+function selectMethod(method, cardDiv) {
+    selectedMethod = method;
+
+    document.querySelectorAll(".method-card").forEach(card => card.classList.remove("selected"));
+    cardDiv.classList.add("selected");
+}
+
+function completePayment() {
+    if (!selectedMethod) {
+        alert("Please select a payment method.");
+        return;
+    }
+
+    let reservations = JSON.parse(localStorage.getItem("reservations")) || [];
+
+    if (reservations.length === 0) {
+        alert("No reservation found.");
+        return;
+    }
+
+    reservations[reservations.length - 1].paymentMethod = selectedMethod;
+    reservations[reservations.length - 1].status = "paid";
+
+    localStorage.setItem("reservations", JSON.stringify(reservations));
+
+    alert("Payment successful!");
+
+    window.location.href = "customerReservations.html";
+}
+
+function goHome() {
+    window.location.href = "Customerprofile.html";
+}
+
+function goDashboard() {
+    window.location.href = "customerDashboard.html";
+}
+
+function goReservations() {
+    window.location.href = "customerReservations.html";
+}
+
+function logout() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "landingpage.html";
+}
+</script>
+
+</body>
+</html>
