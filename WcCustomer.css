@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * {
   margin: 0;
   padding: 0;
@@ -195,3 +196,202 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+=======
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #ffffff;
+  color: #222;
+}
+
+.header {
+  background: #f7a623;
+  padding: 25px 40px;
+}
+
+.header h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+}
+
+.container {
+  display: flex;
+  padding: 30px 40px;
+  gap: 40px;
+}
+
+.left-box {
+  width: 320px;
+  text-align: center;
+}
+
+.alvino {
+  width: 300px;
+  padding: 1px;
+  border-radius: 50px;
+} 
+
+.Logowhite {
+  width: 170px;
+  padding: 1px;
+}
+
+.placeholder-image {
+  width: 260px;
+  height: 300px;
+  background: #ddd;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.name {
+  margin-top: 15px;
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.username {
+  color: #333;
+  font-size: 15px;
+  display: block;
+  margin-top: 5px;
+}
+
+.right-box {
+  flex: 1;
+}
+
+.info-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.info-title span {
+  color: #2563eb;
+}
+
+.info-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 25px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.gender-box {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.full {
+  grid-column: span 2;
+  margin-left: 0px;
+  padding-left: -100px;
+}
+
+.button-row {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.cancel-btn {
+  background: #d1d1d1;
+  color: #333;
+}
+
+.footer {
+  margin-top: 50px;
+  background: #122CD7;
+  color: white;
+  padding: 40px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.footer-box {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.footer-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.footer-heading {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.footer-box a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.newsletter-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.newsletter-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f7a623;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+>>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce

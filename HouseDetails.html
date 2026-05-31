@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -423,3 +424,430 @@
 
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>House Details - HouseFinds</title>
+
+  <link rel="stylesheet" href="Ownerprofilee.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+    }
+
+    .page {
+      padding: 40px 80px;
+    }
+
+    .house-detail-card {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      padding: 24px 26px 30px;
+    }
+
+    .house-header {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .house-image-wrapper {
+      flex: 0 0 320px;
+      height: 220px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #757575;
+    }
+
+    .house-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .house-main-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .house-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .house-category {
+      font-size: 14px;
+      font-weight: 500;
+      color: #ff9800;
+    }
+
+    .house-line {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #f5f5f5;
+      margin-right: 6px;
+      margin-top: 4px;
+    }
+
+    .house-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .btn-back {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-edit {
+      background: #ff9800;
+      color: #fff;
+    }
+
+    .btn-map {
+      background: #1976d2;
+      color: #fff;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+
+    .house-description {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .muted {
+      color: #9e9e9e;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .rooms-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .room-card {
+      background: #fafafa;
+      border-radius: 16px;
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .room-img-wrapper {
+      height: 140px;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #757575;
+    }
+
+    .room-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .room-body {
+      padding: 10px 12px 12px;
+      font-size: 12px;
+    }
+
+    .room-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .room-line {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .room-description {
+      font-size: 12px;
+      color: #666;
+      margin-top: 6px;
+      max-height: 60px;
+      overflow-y: auto;
+    }
+
+    .room-footer {
+      padding: 8px 12px 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .room-footer button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .room-edit-btn {
+      background: #ff9800;
+      color: #fff;
+    }
+
+    .room-goto-house-btn {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 20px;
+      }
+
+      .house-detail-card {
+        padding: 18px 16px 22px;
+      }
+
+      .house-header {
+        flex-direction: column;
+      }
+
+      .house-image-wrapper {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- NAVBAR (reuse style from owner profile) -->
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerHouses.html'">Houses</span>
+      <span>Customer list</span>
+
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="#">Settings</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="logout-btn" onclick="logout()">
+      Logout
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="house-detail-card" id="houseDetail">
+      <!-- Filled by JS -->
+    </div>
+  </main>
+</div>
+
+<script>
+  function goBackToOwnerProfile() {
+    window.location.href = "OWnerPRofile.html";
+  }
+
+  function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      allUsers = allUsers.filter(user => user.email !== loggedInUser.email);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      localStorage.removeItem("loggedInUser");
+
+      alert("Account deleted successfully.");
+      window.location.href = "landingpage.html";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "landingpage.html";
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const container = document.getElementById("houseDetail");
+    let houses = JSON.parse(localStorage.getItem("houses") || "[]");
+    const house = houses.find(h => h.id === id);
+
+    if (!house) {
+      container.innerHTML = "<p>House not found.</p>";
+      return;
+    }
+
+    const rooms = Array.isArray(house.rooms) ? house.rooms : [];
+
+    // compute price summary
+    let priceSummary = "No rooms yet";
+    if (rooms.length > 0) {
+      const prices = rooms.map(r => parseFloat(r.roomPrice)).filter(n => !isNaN(n));
+      if (prices.length > 0) {
+        const minPrice = Math.min(...prices);
+        priceSummary = "From ₱" + minPrice;
+      }
+    }
+
+    container.innerHTML = `
+      <div class="house-header">
+        <div class="house-image-wrapper">
+          ${
+            house.imageDataUrl
+              ? `<img src="${house.imageDataUrl}" alt="${house.houseName}">`
+              : "No house image"
+          }
+        </div>
+        <div class="house-main-info">
+          <div class="house-category">${house.houseCategory || ""}</div>
+          <div class="house-title">${house.houseName || "Untitled house"}</div>
+          <div class="house-line">${house.location || "No location provided"}</div>
+          <div class="house-line">
+            Rooms: ${house.numRooms || 0} • ${priceSummary}
+          </div>
+          <div>
+            ${
+              house.plateNumber
+                ? `<span class="tag">Plate #: ${house.plateNumber}</span>`
+                : ""
+            }
+          </div>
+          <div class="house-actions">
+            <button class="btn-small btn-back" onclick="window.location.href='OwnerHouses.html'">
+              ← Back to houses
+            </button>
+            <button class="btn-small btn-edit" onclick="window.location.href='CreateHouse.html?id=${encodeURIComponent(house.id)}#roomsSection'">
+              Edit house & rooms
+            </button>
+            ${
+              house.mapLocation && house.mapLocation.trim() !== ""
+                ? `<button class="btn-small btn-map" onclick="window.open('${house.mapLocation}','_blank')">
+                    Open in Google Maps
+                   </button>`
+                : ""
+            }
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">House description</div>
+        ${
+          house.description && house.description.trim() !== ""
+            ? `<div class="house-description">${house.description}</div>`
+            : `<div class="muted">No description provided.</div>`
+        }
+      </div>
+
+      <div style="margin-top: 18px;">
+        <div class="section-title">Rooms</div>
+        ${
+          rooms.length === 0
+            ? `<div class="muted">No rooms have been added to this house yet.</div>`
+            : `<div class="rooms-grid">
+                ${rooms.map(room => `
+                  <div class="room-card">
+                    <div class="room-img-wrapper">
+                      ${
+                        room.imageDataUrl
+                          ? `<img src="${room.imageDataUrl}" alt="${room.roomType || 'Room'}">`
+                          : "No room image"
+                      }
+                    </div>
+                    <div class="room-body">
+                      <div class="room-title">${room.roomType || "Room"}</div>
+                      <div class="room-line">Room #${room.roomNumber || "-"}</div>
+                      <div class="room-line">Price: ₱${room.roomPrice || "0"}</div>
+                      <div class="room-line">Capacity: ${room.roomCapacity || "-"} person/s</div>
+                      <div class="room-line">Availability: ${room.roomAvailability || "N/A"}</div>
+                      ${
+                        room.roomDescription && room.roomDescription.trim() !== ""
+                          ? `<div class="room-description">${room.roomDescription}</div>`
+                          : ""
+                      }
+                    </div>
+                    <div class="room-footer">
+                      <button class="room-edit-btn"
+                        onclick="window.location.href='CreateHouse.html?id=${encodeURIComponent(house.id)}#roomsSection'">
+                        Edit rooms
+                      </button>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>`
+        }
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
+>>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce

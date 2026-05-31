@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,4 +98,105 @@
 
   <script src="auth.js"></script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Code - HouseFinds</title>
+  <link rel="stylesheet" href="RegisteredCustomer.css">
+  <style>
+    .reset-card {
+      max-width: 440px;
+      margin: 120px auto;
+      background: white;
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(11,37,69,0.10);
+    }
+    .reset-icon { font-size: 3rem; margin-bottom: 16px; }
+    .reset-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #0B2545;
+      margin-bottom: 10px;
+    }
+    .reset-subtitle {
+      color: #7A90A8;
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .otp-input {
+      width: 100%;
+      padding: 16px;
+      font-size: 2rem;
+      text-align: center;
+      letter-spacing: 12px;
+      border: 2px solid #E8C96A;
+      border-radius: 10px;
+      outline: none;
+      color: #0B2545;
+      font-weight: 700;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    .otp-input:focus { border-color: #C9A84C; }
+    .btn-verify {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #E8C96A, #C9A84C);
+      color: #0B2545;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-verify:hover { opacity: 0.85; }
+    .resend-text {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #7A90A8;
+    }
+    .resend-text a {
+      color: #C9A84C;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body style="background: #0B2545; min-height: 100vh;">
+
+  <div class="reset-card">
+    <div class="reset-icon">📨</div>
+    <h1 class="reset-title">Enter reset code</h1>
+    <p class="reset-subtitle">
+      We sent a 6-digit code to your email. Enter it below to continue resetting your password.
+    </p>
+
+    <input
+      type="text"
+      id="reset-otp"
+      class="otp-input"
+      maxlength="6"
+      placeholder="000000"
+    >
+
+    <button class="btn-verify" onclick="verifyResetOTP()">
+      Verify Code
+    </button>
+
+    <p class="resend-text">
+      Didn't receive a code?
+      <a href="#" onclick="resendResetOTP()">Resend Code</a>
+    </p>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+>>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
 </html>
