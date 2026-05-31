@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="personainfosetting.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="card">
+
+      <header class="header">
+        <h1 class="page-title">Edit profile</h1>
+        <p class="page-subtitle">Update your basic information.</p>
+      </header>
+
+      <main class="main-layout">
+
+        <!-- LEFT: PROFILE PICTURE -->
+        <aside class="profile-column">
+          <div class="avatar-wrapper">
+            <img
+              id="profile-pic-preview"
+              src="https://placehold.co/300x300"
+              alt="Profile picture preview"
+            />
+          </div>
+          <label for="edit-picture" class="edit-picture">Edit picture</label>
+          <input type="file" id="edit-picture" hidden accept="image/*" />
+        </aside>
+
+        <!-- RIGHT: FORM -->
+        <section class="form-column">
+          <form class="profile-form" onsubmit="saveProfile(event)">
+            <div class="form-grid">
+
+              <div class="field">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="First name" />
+              </div>
+
+              <div class="field">
+                <label for="middleName">Middle Name</label>
+                <input type="text" id="middleName" placeholder="Middle name" />
+              </div>
+
+              <div class="field">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Last name" />
+              </div>
+
+              <div class="field full-width">
+                <label for="address">Address</label>
+                <input type="text" id="address"
+                  placeholder="Street, City, Province" />
+              </div>
+
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email"
+                  placeholder="you@example.com" readonly
+                  style="background:#f5f5f5; cursor:not-allowed;">
+                <small style="color:#888; font-size:11px;">
+                  Email cannot be changed.
+                </small>
+              </div>
+
+              <div class="field">
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" />
+              </div>
+
+              <div class="field">
+                <label for="contact">Contact Number</label>
+                <input type="tel" id="contact" placeholder="09XXXXXXXXX" />
+              </div>
+
+              <div class="field">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                  <option value="">-- Select --</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+
+              <div class="field full-width">
+                <label for="newPassword">
+                  New Password
+                  <span style="color:#888; font-weight:400; font-size:12px;">
+                    (leave blank to keep current)
+                  </span>
+                </label>
+                <input type="password" id="newPassword"
+                  placeholder="Enter new password" />
+              </div>
+
+              <div class="field full-width">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword"
+                  placeholder="Confirm new password" />
+              </div>
+
+            </div>
+
+            <div class="form-buttons">
+              <button type="button" class="btn secondary"
+                onclick="window.location.href='Customerprofile.html'">
+                Cancel
+              </button>
+              <button type="submit" class="btn primary">
+                Save changes
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const token = localStorage.getItem("token");
+
+      if (!user) {
+        window.location.href = "Selectingpage.html";
+        return;
+      }
+
+      try {
+        // Load fresh data from database
+        const response = await fetch(
+          `http://localhost:3000/api/auth/profile/${user.id}`,
+          { headers: { 'Authorization': 'Bearer ' + token } }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          fillForm(data);
+        } else {
+          fillForm(user);
+        }
+
+      } catch (err) {
+        // Fallback to localStorage
+        fillForm(user);
+        console.error(err);
+      }
+
+      // Profile picture preview
+      document.getElementById("edit-picture")
+        .addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 2 * 1024 * 1024) {
+            alert("Image too large. Max size is 2MB.");
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById("profile-pic-preview").src =
+              e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+
+    function fillForm(user) {
+      document.getElementById("firstName").value = user.first_name || "";
+      document.getElementById("middleName").value = user.middle_name || "";
+      document.getElementById("lastName").value = user.last_name || "";
+      document.getElementById("address").value = user.address || "";
+      document.getElementById("email").value = user.email || "";
+      document.getElementById("birthdate").value = user.birthdate
+        ? user.birthdate.slice(0, 10) : "";
+      document.getElementById("contact").value = user.phone || "";
+      document.getElementById("gender").value = user.gender || "";
+
+      if (user.profile_image) {
+        document.getElementById("profile-pic-preview").src =
+          user.profile_image;
+      }
+    }
+
+    async function saveProfile(e) {
+      e.preventDefault();
+
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const token = localStorage.getItem("token");
+
+      if (!user) {
+        window.location.href = "Selectingpage.html";
+        return;
+      }
+
+      // Check password match if provided
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (newPassword && newPassword !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      if (newPassword && newPassword.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+      // Get profile image
+      const profileImage = document.getElementById("profile-pic-preview").src;
+
+      const updatedData = {
+        first_name: document.getElementById("firstName").value.trim(),
+        middle_name: document.getElementById("middleName").value.trim(),
+        last_name: document.getElementById("lastName").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        phone: document.getElementById("contact").value.trim(),
+        birthdate: document.getElementById("birthdate").value || null,
+        gender: document.getElementById("gender").value,
+        profile_image: profileImage.includes("placehold.co")
+          ? null : profileImage
+      };
+
+      try {
+        // Update profile
+        const response = await fetch(
+          `http://localhost:3000/api/auth/profile/${user.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(updatedData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert("Error updating profile: " + data.error);
+          return;
+        }
+
+        // Update password if provided
+        if (newPassword) {
+          const passResponse = await fetch(
+            'http://localhost:3000/api/auth/change-password', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              id: user.id,
+              newPassword: newPassword
+            })
+          });
+
+          if (!passResponse.ok) {
+            alert("Profile saved but password update failed.");
+          }
+        }
+
+        // Update localStorage with new data
+        const updatedUser = { ...user, ...updatedData };
+        localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+
+        alert("Profile updated successfully!");
+        window.location.href = "Customerprofile.html";
+
+      } catch (err) {
+        alert("Could not connect to server. Make sure backend is running!");
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>

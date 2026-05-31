@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner - Booking</title>
+  <link rel="stylesheet" href="Ownerprofilee.css">
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+    .page { padding: 40px 80px; }
+    h1 { font-size: 24px; margin-bottom: 16px; }
+    .hint { font-size: 13px; color: #777; margin-bottom: 14px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th { background: #f5f5f5; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .btn-small {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+    .btn-accept { background: #4caf50; color: #fff; }
+    .btn-cancel { background: #f44336; color: #fff; }
+    .btn-extend { background: #1976d2; color: #fff; }
+    .muted { font-size: 13px; color: #888; margin-top: 8px; }
+    .payment-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    .payment-pending { background: #fff3cd; color: #856404; }
+    .payment-paid { background: #d4edda; color: #155724; }
+    .payment-confirmed { background: #d4edda; color: #155724; }
+    .payment-cancelled { background: #f8d7da; color: #721c24; }
+    .end-date-display {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      font-family: inherit;
+      background: transparent;
+      color: #333;
+    }
+    .end-date-small { font-size: 12px; color:#666; }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerHouses.html'"
+        class="createbutton">Create</span>
+      <span onclick="window.location.href='OwnerCustomerList.html.html'"
+        class="custolist">Customer list</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <h1>Booking Confirmation</h1>
+    <p class="hint">
+      Review and manage customer reservations for your rooms.
+    </p>
+
+    <table id="bookingTable">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th>House / Room</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Duration</th>
+          <th>Amount</th>
+          <th>Payment Type</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="10" class="loading">Loading bookings...</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p id="emptyMessage" class="muted" style="display:none;">
+      No bookings yet. Once a customer reserves a room,
+      it will appear here for confirmation.
+    </p>
+  </main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const token = localStorage.getItem("token");
+    const tbody = document.querySelector("#bookingTable tbody");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    if (!user || user.role !== "owner") {
+      window.location.href = "Selectingpage.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/bookings/owner/${user.id}`,
+        { headers: { 'Authorization': 'Bearer ' + token } }
+      );
+
+      const bookings = await response.json();
+      tbody.innerHTML = "";
+
+      if (!bookings.length) {
+        emptyMessage.style.display = "block";
+        tbody.innerHTML = "";
+        return;
+      }
+
+      bookings.forEach(booking => {
+        const tr = document.createElement("tr");
+
+        const daysLeft = computeDaysLeft(booking.check_out);
+        let daysLeftText = "";
+        if (daysLeft === null) daysLeftText = "—";
+        else if (daysLeft === 0) daysLeftText = "Ends today";
+        else if (daysLeft < 0) daysLeftText = "Ended";
+        else daysLeftText = daysLeft + " day(s)";
+
+        tr.innerHTML = `
+          <td>${booking.customer_name || "Unknown"}</td>
+          <td>
+            <div>${booking.customer_email || "-"}</div>
+            <div>${booking.customer_phone || "-"}</div>
+          </td>
+          <td>
+            <div>${booking.house_name || "Unknown"}</div>
+            <div style="font-size:12px;color:#666;">
+              Room ${booking.room_number || ""} 
+              (${booking.room_name || "Room"})
+            </div>
+          </td>
+          <td>${booking.check_in || "-"}</td>
+          <td>${booking.check_out || "-"}</td>
+          <td>${booking.months || "-"} month(s)</td>
+          <td>
+            <div>Total: ₱${Number(booking.total_amount || 0)
+              .toLocaleString("en-PH")}</div>
+            <div style="font-size:11px;color:#888;">
+              Paid: ₱${Number(booking.amount_to_pay || 0)
+              .toLocaleString("en-PH")}
+            </div>
+            ${booking.remaining_balance > 0
+              ? `<div style="font-size:11px;color:#e65100;">
+                  Balance: ₱${Number(booking.remaining_balance)
+                  .toLocaleString("en-PH")}
+                </div>`
+              : ""}
+          </td>
+          <td>
+            <span class="payment-pill ${
+              booking.payment_type === 'reservation'
+                ? 'payment-pending'
+                : 'payment-paid'
+            }">
+              ${booking.payment_type === 'reservation'
+                ? '₱50 Reservation Fee'
+                : 'Full Payment'}
+            </span>
+          </td>
+          <td>${paymentPill(booking.status)}</td>
+          <td>
+            ${booking.status === 'pending' ? `
+              <button class="btn-small btn-accept"
+                onclick="updateBooking(${booking.id}, 'confirmed')">
+                Accept
+              </button>
+              <button class="btn-small btn-cancel"
+                onclick="updateBooking(${booking.id}, 'cancelled')">
+                Decline
+              </button>
+            ` : ""}
+            ${booking.status === 'confirmed' ? `
+              <button class="btn-small btn-extend"
+                onclick="extendBooking(${booking.id}, '${booking.check_out}')">
+                Extend
+              </button>
+            ` : ""}
+            ${booking.status === 'cancelled' ? `
+              <span style="color:#888; font-size:12px;">Cancelled</span>
+            ` : ""}
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+    } catch (err) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10" style="text-align:center; color:red; padding:16px;">
+            Could not load bookings. Make sure server is running.
+          </td>
+        </tr>`;
+      console.error(err);
+    }
+  });
+
+  async function updateBooking(id, status) {
+    const token = localStorage.getItem("token");
+    const action = status === 'confirmed' ? 'Accept' : 'Decline';
+
+    if (!confirm(`${action} this booking?`)) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/bookings/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ status })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Booking ${status === 'confirmed'
+          ? 'accepted' : 'declined'} successfully!`);
+        location.reload();
+      } else {
+        alert("Error: " + data.error);
+      }
+
+    } catch (err) {
+      alert("Could not connect to server.");
+      console.error(err);
+    }
+  }
+
+  async function extendBooking(id, currentEndDate) {
+    const token = localStorage.getItem("token");
+
+    const input = prompt(
+      `Propose a new end date (YYYY-MM-DD).\nCurrent end date: ${currentEndDate}`
+    );
+    if (!input) return;
+
+    const newDate = new Date(input);
+    const oldDate = new Date(currentEndDate);
+
+    if (isNaN(newDate.getTime())) {
+      alert("Invalid date format. Use YYYY-MM-DD.");
+      return;
+    }
+
+    if (newDate <= oldDate) {
+      alert("New date must be later than current end date.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/bookings/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          status: 'confirmed',
+          check_out: input
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Booking extended successfully!");
+        location.reload();
+      } else {
+        alert("Error: " + data.error);
+      }
+
+    } catch (err) {
+      alert("Could not connect to server.");
+      console.error(err);
+    }
+  }
+
+  function computeDaysLeft(endDateStr) {
+    if (!endDateStr) return null;
+    const today = new Date();
+    const endDate = new Date(endDateStr);
+    if (isNaN(endDate.getTime())) return null;
+    const t0 = new Date(
+      today.getFullYear(), today.getMonth(), today.getDate()
+    );
+    const t1 = new Date(
+      endDate.getFullYear(), endDate.getMonth(), endDate.getDate()
+    );
+    return Math.ceil((t1 - t0) / (1000 * 60 * 60 * 24));
+  }
+
+  function paymentPill(status) {
+    status = (status || "pending").toLowerCase();
+    if (status === "confirmed") {
+      return `<span class="payment-pill payment-confirmed">Confirmed</span>`;
+    } else if (status === "cancelled") {
+      return `<span class="payment-pill payment-cancelled">Cancelled</span>`;
+    } else {
+      return `<span class="payment-pill payment-pending">Pending</span>`;
+    }
+  }
+
+  async function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const token = localStorage.getItem("token");
+
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (!confirm(
+      "Are you sure you want to delete your account? This cannot be undone."
+    )) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/auth/delete/${loggedInUser.id}`,
+        {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        }
+      );
+
+      if (response.ok) {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("token");
+        alert("Account deleted successfully!");
+        window.location.href = "landingpage.html";
+      } else {
+        alert("Failed to delete account.");
+      }
+
+    } catch (err) {
+      alert("Could not connect to server.");
+      console.error(err);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.location.href = "landingpage.html";
+  }
+</script>
+</body>
+</html>

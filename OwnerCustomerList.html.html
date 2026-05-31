@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Owner - Customer List</title>
+  <link rel="stylesheet" href="Ownerprofilee.css">
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+    .page { padding: 40px 80px; }
+    h1 { font-size: 24px; margin-bottom: 16px; }
+    .hint { font-size: 13px; color: #777; margin-bottom: 14px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th { background: #f5f5f5; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .btn-small {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+    .btn-view { background: #2196f3; color: #fff; }
+    .btn-profile { background: #9c27b0; color: #fff; }
+    .muted { font-size: 13px; color: #888; margin-top: 8px; }
+    .loading { text-align: center; padding: 20px; color: #888; }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #ffffff;
+      width: 360px;
+      max-width: 90%;
+      padding: 24px 20px 20px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      position: relative;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 14px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #555;
+    }
+    .close-btn:hover { color: #000; }
+    .profile-img {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 3px solid #ff9800;
+    }
+    .modal-content h2 { margin: 6px 0 10px; font-size: 20px; }
+    .modal-content p { margin: 4px 0; font-size: 14px; color: #555; }
+    .modal-content p b { color: #333; }
+
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="navbar">
+    <img class="logo" src="logofindsb.png" alt="Logo">
+    <nav class="nav-links">
+      <span onclick="window.location.href='OwnerHouses.html'"
+        class="createbutton">Create</span>
+      <span onclick="window.location.href='OwnerBooking.html'"
+        class="booking">Booking</span>
+      <div class="profile-dropdown">
+        <span class="profile-link">Profile &#9662;</span>
+        <div class="dropdown-content">
+          <a href="OWnerPRofile.html">Account</a>
+          <a href="#" onclick="deleteAccount()">Delete Account</a>
+          <a href="PersonainfoSettingOWNER.html">Edit Account</a>
+        </div>
+      </div>
+    </nav>
+    <div class="logout-btn" onclick="logout()">Log Out</div>
+  </header>
+
+  <main class="page">
+    <h1>Customer List</h1>
+    <p class="hint">
+      Customers who have confirmed bookings for your rooms appear here.
+    </p>
+
+    <table id="customersTable">
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>House / Room</th>
+          <th>Check In</th>
+          <th>Check Out</th>
+          <th>Days Left</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="10" class="loading">Loading customers...</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p id="emptyMessage" class="muted" style="display:none;">
+      No confirmed customers yet. Once you accept a booking
+      it will appear here.
+    </p>
+  </main>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeProfile()">&times;</span>
+    <img id="profileImg" class="profile-img"
+      src="https://placehold.co/110x110" alt="Profile Picture">
+    <h2 id="profileName"></h2>
+    <p><b>Email:</b> <span id="profileEmail"></span></p>
+    <p><b>Phone:</b> <span id="profilePhone"></span></p>
+    <p><b>House:</b> <span id="profileHouse"></span></p>
+    <p><b>Room:</b> <span id="profileRoom"></span></p>
+    <p><b>Check In:</b> <span id="profileCheckIn"></span></p>
+    <p><b>Check Out:</b> <span id="profileCheckOut"></span></p>
+    <p><b>Days Left:</b> <span id="profileDaysLeft"></span></p>
+    <p><b>Amount Paid:</b> <span id="profileAmount"></span></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    const token = localStorage.getItem("token");
+    const tbody = document.querySelector("#customersTable tbody");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    if (!user || user.role !== "owner") {
+      window.location.href = "Selectingpage.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/bookings/owner/${user.id}`,
+        { headers: { 'Authorization': 'Bearer ' + token } }
+      );
+
+      const bookings = await response.json();
+      tbody.innerHTML = "";
+
+      // Filter confirmed bookings only
+      const confirmed = bookings.filter(
+        b => b.status === 'confirmed'
+      );
+
+      if (!confirmed.length) {
+        emptyMessage.style.display = "block";
+        tbody.innerHTML = "";
+        return;
+      }
+
+      confirmed.forEach(booking => {
+        const tr = document.createElement("tr");
+
+        const daysLeft = computeDaysLeft(booking.check_out);
+        let daysLeftText = "—";
+        if (daysLeft === null) daysLeftText = "—";
+        else if (daysLeft === 0) daysLeftText = "Ends today";
+        else if (daysLeft < 0) daysLeftText = "Ended";
+        else daysLeftText = daysLeft + " day(s)";
+
+        tr.innerHTML = `
+          <td>${booking.customer_name || "Unknown"}</td>
+          <td>${booking.customer_email || "-"}</td>
+          <td>${booking.customer_phone || "-"}</td>
+          <td>
+            <div>${booking.house_name || "Unknown"}</div>
+            <div style="font-size:11px;color:#666;">
+              Room ${booking.room_number || ""}
+              (${booking.room_name || "Room"})
+            </div>
+          </td>
+          <td>${booking.check_in || "-"}</td>
+          <td>${booking.check_out || "-"}</td>
+          <td>${daysLeftText}</td>
+          <td>
+            <div>₱${Number(booking.amount_to_pay || 0)
+              .toLocaleString("en-PH")} paid</div>
+            ${booking.remaining_balance > 0
+              ? `<div style="font-size:11px;color:#e65100;">
+                  ₱${Number(booking.remaining_balance)
+                  .toLocaleString("en-PH")} balance
+                </div>`
+              : ""}
+          </td>
+          <td>
+            <span class="status-pill status-${booking.status}">
+              ${(booking.status || "pending").toUpperCase()}
+            </span>
+          </td>
+          <td>
+            <button class="btn-small btn-profile">View Profile</button>
+            <button class="btn-small btn-view">Reservations</button>
+          </td>
+        `;
+
+        // View Profile button
+        tr.querySelector(".btn-profile").addEventListener("click", () => {
+          showProfileModal(booking);
+        });
+
+        // View Reservations button
+        tr.querySelector(".btn-view").addEventListener("click", () => {
+          const summary =
+            `House: ${booking.house_name}\n` +
+            `Room: ${booking.room_name} (${booking.room_number})\n` +
+            `Check In: ${booking.check_in}\n` +
+            `Check Out: ${booking.check_out}\n` +
+            `Duration: ${booking.months} month(s)\n` +
+            `Total: ₱${Number(booking.total_amount || 0)
+              .toLocaleString("en-PH")}\n` +
+            `Paid: ₱${Number(booking.amount_to_pay || 0)
+              .toLocaleString("en-PH")}\n` +
+            `Status: ${booking.status}`;
+
+          alert(`Reservation details for ${booking.customer_name}:\n\n${summary}`);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+    } catch (err) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10"
+            style="text-align:center; color:red; padding:16px;">
+            Could not load customers. Make sure server is running.
+          </td>
+        </tr>`;
+      console.error(err);
+    }
+  });
+
+  function showProfileModal(booking) {
+    const daysLeft = computeDaysLeft(booking.check_out);
+    let daysLeftText = "—";
+    if (daysLeft === 0) daysLeftText = "Ends today";
+    else if (daysLeft > 0) daysLeftText = daysLeft + " day(s)";
+    else if (daysLeft < 0) daysLeftText = "Ended";
+
+    document.getElementById("profileImg").src =
+      booking.profile_image || "https://placehold.co/110x110";
+    document.getElementById("profileName").innerText =
+      booking.customer_name || "Unknown";
+    document.getElementById("profileEmail").innerText =
+      booking.customer_email || "-";
+    document.getElementById("profilePhone").innerText =
+      booking.customer_phone || "-";
+    document.getElementById("profileHouse").innerText =
+      booking.house_name || "-";
+    document.getElementById("profileRoom").innerText =
+      `${booking.room_name || "Room"} (${booking.room_number || "-"})`;
+    document.getElementById("profileCheckIn").innerText =
+      booking.check_in || "-";
+    document.getElementById("profileCheckOut").innerText =
+      booking.check_out || "-";
+    document.getElementById("profileDaysLeft").innerText = daysLeftText;
+    document.getElementById("profileAmount").innerText =
+      `₱${Number(booking.amount_to_pay || 0).toLocaleString("en-PH")}`;
+
+    document.getElementById("profileModal").style.display = "flex";
+  }
+
+  function closeProfile() {
+    document.getElementById("profileModal").style.display = "none";
+  }
+
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("profileModal");
+    if (e.target === modal) closeProfile();
+  });
+
+  function computeDaysLeft(endDateStr) {
+    if (!endDateStr) return null;
+    const today = new Date();
+    const endDate = new Date(endDateStr);
+    if (isNaN(endDate.getTime())) return null;
+    const t0 = new Date(
+      today.getFullYear(), today.getMonth(), today.getDate()
+    );
+    const t1 = new Date(
+      endDate.getFullYear(), endDate.getMonth(), endDate.getDate()
+    );
+    return Math.ceil((t1 - t0) / (1000 * 60 * 60 * 24));
+  }
+
+  async function deleteAccount() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const token = localStorage.getItem("token");
+
+    if (!loggedInUser) {
+      alert("No user is currently logged in!");
+      return;
+    }
+
+    if (!confirm(
+      "Are you sure you want to delete your account? This cannot be undone."
+    )) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/auth/delete/${loggedInUser.id}`,
+        {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        }
+      );
+
+      if (response.ok) {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("token");
+        alert("Account deleted successfully!");
+        window.location.href = "landingpage.html";
+      } else {
+        alert("Failed to delete account.");
+      }
+
+    } catch (err) {
+      alert("Could not connect to server.");
+      console.error(err);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.location.href = "landingpage.html";
+  }
+</script>
+
+</body>
+</html>

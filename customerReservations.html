@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Reservations</title>
+<link rel="stylesheet" href="Ownerprofilee.css">
+<link rel="stylesheet" href="customerReservations.css">
+</head>
+
+<body>
+<div class="container">
+
+<header class="navbar">
+  <img class="logo" src="logofindsb.png" alt="Logo">
+  <nav class="nav-links">
+    <span onclick="goDashboard()" class="Dashboard">Dashboard</span>
+    <span onclick="goReservations()" class="Reservations">Reservations</span>
+    <span onclick="goProfile()" class="Dashboard">Profile</span>
+  </nav>
+  <div class="logout-btn" onclick="logout()">Log Out</div>
+</header>
+
+<main class="reservation-container">
+  <h1 class="title">My Reservations</h1>
+  <p class="subtitle">Track your boarding house reservations, payment status, and approval from owners.</p>
+
+  <table class="reservation-table">
+    <thead>
+      <tr>
+        <th>House</th>
+        <th>Room</th>
+        <th>Price</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="reservationBody"></tbody>
+  </table>
+</main>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  loadReservations();
+});
+
+async function loadReservations() {
+  const tbody = document.getElementById("reservationBody");
+  const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+  const token = localStorage.getItem("token");
+
+  if (!user) {
+    window.location.href = "Selectingpage.html";
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/bookings/${user.id}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const reservations = await response.json();
+    tbody.innerHTML = "";
+
+    if (!reservations.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center; padding:12px;">
+            No reservations found.
+          </td>
+        </tr>`;
+      return;
+    }
+
+    reservations.forEach(res => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${escapeHtml(res.title || "Unknown house")}</td>
+        <td>${escapeHtml(res.location || "Room")}</td>
+        <td>₱${Number(res.price || 0).toLocaleString("en-PH")}</td>
+        <td>${res.check_in || "-"}</td>
+        <td>${res.check_out || "-"}</td>
+        <td class="${statusColor(res.status)}">${(res.status || "Pending").toUpperCase()}</td>
+        <td class="actions-cell">
+          <button class="action-btn btn-sms" onclick="contactOwner(${res.id})">
+            Contact Owner
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch (err) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; padding:12px; color:red;">
+          Could not load reservations. Make sure server is running.
+        </td>
+      </tr>`;
+    console.error(err);
+  }
+}
+
+function contactOwner(bookingId) {
+  alert("Contact owner feature coming soon for booking #" + bookingId);
+}
+
+function statusColor(stat) {
+  const s = (stat || "").toLowerCase();
+  if (s === "pending") return "status-pending";
+  if (s === "confirmed") return "status-accepted";
+  if (s === "cancelled") return "status-declined";
+  return "";
+}
+
+function escapeHtml(text) {
+  if (!text && text !== 0) return "";
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function goProfile() { window.location.href = "Customerprofile.html"; }
+function goDashboard() { window.location.href = "customerDashboard.html"; }
+function goReservations() { window.location.href = "customerReservations.html"; }
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("token");
+  window.location.href = "landingpage.html";
+}
+</script>
+
+</body>
+</html>

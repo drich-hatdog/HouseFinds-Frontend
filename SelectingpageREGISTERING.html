@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HouseFinds – Choose your role</title>
+    <link rel="stylesheet" href="Selectingowncus.css">
+    <script src="auth.js" defer></script>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- Top bar with logo -->
+    <header class="top-bar">
+        <div class="logo-wrap">
+            <img class="logo" src="logofindsw.png" alt="HouseFinds logo">
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="content">
+        <section class="intro">
+            <h1>Welcome to HouseFinds</h1>
+            <p class="subtitle">
+                Join HouseFinds today to easily manage boarding houses or find your next home.
+            </p>
+        </section>
+
+        <!-- Role cards -->
+        <section class="roles">
+            <a href="loginOWNER.html" onclick="setRole('owner');" class="role-card owner-card">
+                <div class="role-text">
+                    <span class="role-label">I am an</span>
+                    <h2>Owner</h2>
+                    <p>List your boarding houses, manage rooms, and monitor your customers in one place.</p>
+                </div>
+                <div class="role-media">
+                    <img src="OWNERHANDYELLOW.png" alt="" class="role-accent">
+                </div>
+            </a>
+
+
+            <a href="LoginCUSTOMER.html" onclick="setRole('customer');" class="role-card customer-card">
+                <div class="role-text">
+                    <span class="role-label">I am a</span>
+                    <h2>Customer</h2>
+                    <p>Discover verified boarding houses, compare rooms, and reserve your stay securely.</p>
+                </div>
+                <div class="role-media">
+                    <img src="HANDCUSTOMERBLUE.png" alt="" class="role-accent">
+                </div>
+            </a>
+        </section>
+
+        <p class="note">
+            Please avoid creating duplicate accounts. Use only one account to ensure smooth booking,
+            management, and communication.
+        </p>
+    </main>
+
+</div>
+
+<script>
+function setRole(role) {
+    localStorage.setItem("selectedRole", role);
+}
+</script>
+
+</body>
+</html>

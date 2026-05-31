@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your House</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px 28px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #FFA726;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 24px 0 12px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #ff9800;
+      box-shadow: 0 0 0 2px rgba(255,152,0,0.2);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      font-size: 13px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-cancel { background: #e0e0e0; color: #333; }
+    .btn-save { background: #ff9800; color: #fff; }
+    .btn-save:hover { opacity: 0.9; }
+    .btn-delete { background: #f44336; color: #fff; }
+    .btn-delete:hover { opacity: 0.9; }
+
+    .rooms-section {
+      margin-top: 24px;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+
+    .room-form {
+      margin-bottom: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: #fafafa;
+      border: 1px solid #eee;
+    }
+
+    .rooms-list {
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      overflow: hidden;
+    }
+
+    .rooms-header,
+    .room-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      padding: 8px 10px;
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .rooms-header {
+      background: #f0f0f0;
+      font-weight: 600;
+    }
+
+    .room-row:nth-child(odd) { background: #ffffff; }
+    .room-row:nth-child(even) { background: #f9f9f9; }
+
+    .room-actions { display: flex; gap: 6px; }
+
+    .room-actions button {
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .room-edit-btn { background: #ffa000; color: #fff; }
+    .room-delete-btn { background: #e53935; color: #fff; }
+
+    .no-rooms {
+      padding: 10px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .image-preview {
+      margin-top: 10px;
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      display: none;
+      border: 1px solid #ddd;
+    }
+
+    .room-image-preview {
+      margin-top: 10px;
+      max-width: 150px;
+      max-height: 100px;
+      border-radius: 8px;
+      display: none;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>Create your house</h1>
+
+    <form id="createHouseForm">
+      <input type="hidden" id="houseId" name="houseId">
+
+      <h2>House information</h2>
+
+      <div class="form-group">
+        <label for="houseCategory">House category:</label>
+        <select id="houseCategory" name="houseCategory" required>
+          <option value="">-- Select category --</option>
+          <option value="Boarding house">Boarding house</option>
+          <option value="Dormitory">Dormitory</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="houseName">House name:</label>
+        <input type="text" id="houseName" name="houseName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location"
+          placeholder="e.g. Barangay, City, Province" required>
+      </div>
+
+      <div class="form-group">
+        <label for="numRooms">Number of rooms:</label>
+        <input type="number" id="numRooms" name="numRooms" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="plateNumber">House plate number (Optional):</label>
+        <input type="text" id="plateNumber" name="plateNumber"
+          placeholder="Optional">
+      </div>
+
+      <div class="form-group">
+        <label for="housePhoto">Picture of the house:</label>
+        <input type="file" id="housePhoto" name="housePhoto"
+          accept="image/*" onchange="previewHouseImage(event)">
+        <img id="houseImagePreview" class="image-preview" alt="House Preview">
+        <small>Upload a photo of your house. Max size: 2MB.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="mapLocation">Map location (Google Maps link or address):</label>
+        <input type="text" id="mapLocation" name="mapLocation"
+          placeholder="Paste Google Maps link or full address">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"
+          placeholder="Describe the house, nearby landmarks, rules, utilities, etc.">
+        </textarea>
+      </div>
+
+      <!-- ROOMS SECTION -->
+      <div class="rooms-section" id="roomsSection">
+        <h2>Rooms</h2>
+
+        <div class="room-form">
+          <input type="hidden" id="roomId">
+
+          <div class="form-group">
+            <label for="roomType">Room type:</label>
+            <input type="text" id="roomType"
+              placeholder="e.g. Single, Double, Shared">
+          </div>
+
+          <div class="form-group">
+            <label for="roomPrice">Price (₱):</label>
+            <input type="number" id="roomPrice" min="0"
+              placeholder="e.g. 3500">
+          </div>
+
+          <div class="form-group">
+            <label for="roomNumber">Room number:</label>
+            <input type="text" id="roomNumber" placeholder="e.g. 101">
+          </div>
+
+          <div class="form-group">
+            <label for="roomAvailability">Room availability:</label>
+            <select id="roomAvailability">
+              <option value="">-- Select --</option>
+              <option value="Available">Available</option>
+              <option value="Occupied">Occupied</option>
+              <option value="Reserved">Reserved</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="roomCapacity">Room capacity (number of persons):</label>
+            <input type="number" id="roomCapacity" min="1"
+              placeholder="e.g. 1, 2, 4">
+          </div>
+
+          <div class="form-group">
+            <label for="roomPhoto">Photo of the room:</label>
+            <input type="file" id="roomPhoto" accept="image/*"
+              onchange="previewRoomImage(event)">
+            <img id="roomImagePreview" class="room-image-preview"
+              alt="Room Preview">
+            <small>Upload a photo of the room. Max size: 2MB.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="roomDescription">Description (optional):</label>
+            <textarea id="roomDescription"
+              placeholder="Additional details about the room..."></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="button" class="btn btn-cancel"
+              onclick="clearRoomForm()">Cancel room</button>
+            <button type="button" class="btn btn-delete"
+              id="roomDeleteBtn" style="display:none;">Delete room</button>
+            <button type="button" class="btn btn-save"
+              id="roomSaveBtn">Save room</button>
+          </div>
+        </div>
+
+        <div class="rooms-list" id="roomsListContainer"></div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="btn btn-cancel"
+          onclick="cancelCreate()">Cancel</button>
+        <button type="button" class="btn btn-delete"
+          id="deleteHouseBtn" style="display:none;">Delete house</button>
+        <button type="submit" class="btn btn-save">Save house</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let currentRooms = [];
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get("id");
+
+    // -------- IMAGE PREVIEWS --------
+    function previewHouseImage(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById("houseImagePreview");
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+      }
+    }
+
+    function previewRoomImage(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById("roomImagePreview");
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+      }
+    }
+
+    // -------- CONVERT FILE TO BASE64 --------
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // -------- RENDER ROOMS LIST --------
+    function renderRoomsList() {
+      const container = document.getElementById("roomsListContainer");
+      container.innerHTML = "";
+
+      if (!currentRooms.length) {
+        const div = document.createElement("div");
+        div.className = "no-rooms";
+        div.textContent = "No rooms added yet. Use the form above to add a room.";
+        container.appendChild(div);
+        return;
+      }
+
+      const header = document.createElement("div");
+      header.className = "rooms-header";
+      header.innerHTML = `
+        <span>Type</span>
+        <span>Price</span>
+        <span>Number</span>
+        <span>Availability</span>
+        <span>Actions</span>
+      `;
+      container.appendChild(header);
+
+      currentRooms.forEach(room => {
+        const row = document.createElement("div");
+        row.className = "room-row";
+        row.innerHTML = `
+          <span>${room.roomType || "-"}</span>
+          <span>₱${room.roomPrice || "0"}</span>
+          <span>${room.roomNumber || "-"}</span>
+          <span>${room.roomAvailability || "-"}</span>
+          <span class="room-actions">
+            <button class="room-edit-btn">Edit</button>
+            <button class="room-delete-btn">Delete</button>
+          </span>
+        `;
+
+        row.querySelector(".room-edit-btn")
+          .addEventListener("click", () => editRoom(room.id));
+        row.querySelector(".room-delete-btn")
+          .addEventListener("click", () => deleteRoom(room.id));
+        container.appendChild(row);
+      });
+    }
+
+    function clearRoomForm() {
+      document.getElementById("roomId").value = "";
+      document.getElementById("roomType").value = "";
+      document.getElementById("roomPrice").value = "";
+      document.getElementById("roomNumber").value = "";
+      document.getElementById("roomAvailability").value = "";
+      document.getElementById("roomCapacity").value = "";
+      document.getElementById("roomDescription").value = "";
+      document.getElementById("roomPhoto").value = "";
+      document.getElementById("roomImagePreview").style.display = "none";
+      document.getElementById("roomDeleteBtn").style.display = "none";
+    }
+
+    function editRoom(id) {
+      const room = currentRooms.find(r => r.id === id);
+      if (!room) return;
+      document.getElementById("roomId").value = room.id;
+      document.getElementById("roomType").value = room.roomType || "";
+      document.getElementById("roomPrice").value = room.roomPrice || "";
+      document.getElementById("roomNumber").value = room.roomNumber || "";
+      document.getElementById("roomAvailability").value = room.roomAvailability || "";
+      document.getElementById("roomCapacity").value = room.roomCapacity || "";
+      document.getElementById("roomDescription").value = room.roomDescription || "";
+
+      if (room.imageDataUrl) {
+        const preview = document.getElementById("roomImagePreview");
+        preview.src = room.imageDataUrl;
+        preview.style.display = "block";
+      }
+
+      document.getElementById("roomDeleteBtn").style.display = "inline-block";
+      document.getElementById("roomDeleteBtn").onclick = () => deleteRoom(id);
+    }
+
+    function deleteRoom(id) {
+      if (!confirm("Are you sure you want to delete this room?")) return;
+      currentRooms = currentRooms.filter(r => r.id !== id);
+      clearRoomForm();
+      renderRoomsList();
+    }
+
+    // -------- SAVE ROOM TO LIST --------
+    document.getElementById("roomSaveBtn")
+      .addEventListener("click", async function () {
+      const existingId = document.getElementById("roomId").value;
+      const roomId = existingId || ("r_" + Date.now());
+
+      const roomData = {
+        id: roomId,
+        roomType: document.getElementById("roomType").value.trim(),
+        roomPrice: document.getElementById("roomPrice").value.trim(),
+        roomNumber: document.getElementById("roomNumber").value.trim(),
+        roomAvailability: document.getElementById("roomAvailability").value,
+        roomCapacity: document.getElementById("roomCapacity").value.trim(),
+        roomDescription: document.getElementById("roomDescription").value.trim(),
+        imageDataUrl: null
+      };
+
+      if (!roomData.roomType || !roomData.roomNumber) {
+        alert("Please fill in at least room type and room number.");
+        return;
+      }
+
+      // Handle room photo
+      const roomPhotoFile = document.getElementById("roomPhoto").files[0];
+      if (roomPhotoFile) {
+        if (roomPhotoFile.size > 2 * 1024 * 1024) {
+          alert("Room image is too large. Max size is 2MB.");
+          return;
+        }
+        roomData.imageDataUrl = await fileToBase64(roomPhotoFile);
+      } else {
+        // Keep existing image if editing
+        const existing = currentRooms.find(r => r.id === roomId);
+        if (existing) roomData.imageDataUrl = existing.imageDataUrl;
+      }
+
+      const index = currentRooms.findIndex(r => r.id === roomId);
+      if (index !== -1) {
+        currentRooms[index] = roomData;
+      } else {
+        currentRooms.push(roomData);
+      }
+
+      clearRoomForm();
+      renderRoomsList();
+    });
+
+    // -------- LOAD IF EDITING --------
+    document.addEventListener("DOMContentLoaded", async function () {
+      if (editId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/rooms/${editId}`
+          );
+          const house = await response.json();
+
+          document.getElementById("houseId").value = house.id;
+          document.getElementById("houseCategory").value = house.category || "";
+          document.getElementById("houseName").value = house.title || "";
+          document.getElementById("location").value = house.location || "";
+          document.getElementById("numRooms").value = house.num_rooms || "";
+          document.getElementById("plateNumber").value = house.plate_number || "";
+          document.getElementById("mapLocation").value = house.map_location || "";
+          document.getElementById("description").value = house.description || "";
+
+          // Show existing house image
+          if (house.image_url) {
+            const preview = document.getElementById("houseImagePreview");
+            preview.src = house.image_url;
+            preview.style.display = "block";
+          }
+
+          currentRooms = house.rooms_data
+            ? JSON.parse(house.rooms_data)
+            : [];
+          renderRoomsList();
+
+          const deleteHouseBtn = document.getElementById("deleteHouseBtn");
+          deleteHouseBtn.style.display = "inline-block";
+          deleteHouseBtn.addEventListener("click", async () => {
+            if (!confirm("Are you sure you want to delete this house?")) return;
+            const token = localStorage.getItem("token");
+            const res = await fetch(
+              `http://localhost:3000/api/rooms/${editId}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+              alert("House deleted!");
+              window.location.href = "OwnerHouses.html";
+            }
+          });
+
+        } catch (err) {
+          alert("Could not load house data.");
+          console.error(err);
+        }
+      } else {
+        currentRooms = [];
+        renderRoomsList();
+      }
+    });
+
+    // -------- CANCEL --------
+    function cancelCreate() {
+      window.location.href = "OwnerHouses.html";
+    }
+
+    // -------- SAVE HOUSE TO DATABASE --------
+    document.getElementById("createHouseForm")
+      .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const token = localStorage.getItem("token");
+
+      if (!user || user.role !== "owner") {
+        alert("You must be logged in as an owner to create a house.");
+        return;
+      }
+
+      // Handle house photo
+      let houseImageBase64 = null;
+      const housePhotoFile = document.getElementById("housePhoto").files[0];
+      if (housePhotoFile) {
+        if (housePhotoFile.size > 2 * 1024 * 1024) {
+          alert("House image is too large. Max size is 2MB.");
+          return;
+        }
+        houseImageBase64 = await fileToBase64(housePhotoFile);
+      }
+
+      const existingId = document.getElementById("houseId").value;
+
+      const houseData = {
+        owner_id: user.id,
+        category: document.getElementById("houseCategory").value,
+        title: document.getElementById("houseName").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        num_rooms: document.getElementById("numRooms").value,
+        plate_number: document.getElementById("plateNumber").value.trim(),
+        image_url: houseImageBase64,
+        map_location: document.getElementById("mapLocation").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        rooms_data: JSON.stringify(currentRooms),
+        status: "available",
+        price: currentRooms.length > 0
+          ? Math.min(...currentRooms
+              .map(r => parseFloat(r.roomPrice) || 0)
+              .filter(n => n > 0))
+          : 0
+      };
+
+      if (!houseData.title) {
+        alert("Please enter a house name.");
+        return;
+      }
+
+      try {
+        let response;
+
+        if (existingId) {
+          // If no new image uploaded, keep existing
+          if (!houseImageBase64) {
+            delete houseData.image_url;
+          }
+
+          response = await fetch(
+            `http://localhost:3000/api/rooms/${existingId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(houseData)
+          });
+        } else {
+          response = await fetch('http://localhost:3000/api/rooms', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(houseData)
+          });
+        }
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(existingId
+            ? "House updated successfully!"
+            : "House created successfully!");
+          window.location.href = "OwnerHouses.html";
+        } else {
+          alert("Error: " + data.error);
+        }
+
+      } catch (err) {
+        alert("Could not connect to server. Make sure backend is running!");
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>
