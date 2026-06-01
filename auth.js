@@ -23,7 +23,7 @@ async function signUp() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/register', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -72,7 +72,7 @@ async function signUpOwner() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/register', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -111,7 +111,7 @@ async function loginUser() {
   const password = document.getElementById("password").value;
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/login', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -134,7 +134,7 @@ async function loginUser() {
         localStorage.setItem("verifyEmail", email);
         alert("Your email is not verified yet! We'll send you a new OTP code.");
 
-        await fetch('https://housefinds-backend.up.railway.app/api/auth/resend-otp', {
+        await fetch(' housefinds-backends.up.railway.appapi/auth/resend-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })
@@ -165,7 +165,7 @@ async function verifyOTP() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/verify', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp })
@@ -200,7 +200,7 @@ async function resendOTP() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/resend-otp', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/resend-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -278,7 +278,7 @@ async function deleteAccount() {
   }
 
   try {
-    const response = await fetch(`https://housefinds-backend.up.railway.app/api/auth/delete/${loggedInUser.id}`, {
+    const response = await fetch(` housefinds-backends.up.railway.appapi/auth/delete/${loggedInUser.id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem("token")
@@ -312,7 +312,7 @@ async function forgotPassword() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/forgot-password', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -347,7 +347,7 @@ async function verifyResetOTP() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/verify-reset-otp', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/verify-reset-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp })
@@ -381,7 +381,7 @@ async function resendResetOTP() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/forgot-password', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -425,7 +425,7 @@ async function resetPassword() {
   }
 
   try {
-    const response = await fetch('https://housefinds-backend.up.railway.app/api/auth/reset-password', {
+    const response = await fetch(' housefinds-backends.up.railway.appapi/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, newPassword })
