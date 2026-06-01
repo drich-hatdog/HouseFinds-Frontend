@@ -184,12 +184,11 @@
 
     try {
       const response = await fetch(
-<<<<<<< HEAD
+ 
         `https://housefinds-backend.up.railway.app/api/bookings/owner/${user.id}`,
 =======
         `http://localhost:3000/api/bookings/owner/${user.id}`,
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-        { headers: { 'Authorization': 'Bearer ' + token } }
+         { headers: { 'Authorization': 'Bearer ' + token } }
       );
 
       const bookings = await response.json();
@@ -356,12 +355,11 @@
 
     try {
       const response = await fetch(
-<<<<<<< HEAD
+ 
         `https://housefinds-backend.up.railway.app/api/auth/delete/${loggedInUser.id}`,
 =======
         `http://localhost:3000/api/auth/delete/${loggedInUser.id}`,
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-        {
+         {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + token }
         }

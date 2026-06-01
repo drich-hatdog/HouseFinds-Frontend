@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ 
 /// -----------------------------
 // ROLE SELECTION
 // -----------------------------
@@ -894,5 +894,4 @@ async function resetPassword() {
     alert("Could not connect to server.");
     console.error(err);
   }
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-}
+ }

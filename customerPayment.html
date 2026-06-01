@@ -256,12 +256,11 @@
     if (selectedMethod === 'Cash') {
       try {
         const response = await fetch(
-<<<<<<< HEAD
+ 
           `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
 =======
           `http://localhost:3000/api/bookings/${currentBooking.bookingId}`, {
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-          method: 'PUT',
+           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -312,12 +311,11 @@
         `${currentBooking.months} month(s)`;
 
       const response = await fetch(
-<<<<<<< HEAD
+ 
         `https://housefinds-backend.up.railway.app/api/bookings/pay/${currentBooking.bookingId}`, {
 =======
         `http://localhost:3000/api/bookings/pay/${currentBooking.bookingId}`, {
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-        method: 'POST',
+         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -335,12 +333,11 @@
       if (response.ok) {
         // Save payment method to database
         await fetch(
-<<<<<<< HEAD
+ 
           `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
 =======
           `http://localhost:3000/api/bookings/${currentBooking.bookingId}`, {
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
-          method: 'PUT',
+           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token

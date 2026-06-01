@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ 
 document.addEventListener("DOMContentLoaded", () => {
     loadHouseDetails();
 });
@@ -156,4 +156,4 @@ function logout() {
     localStorage.removeItem("loggedInUser");
     window.location.href = "landingpage.html";
 }
->>>>>>> 5061bb008aa1f08bd7ed17e020a9b8d9e1bc66ce
+ 
