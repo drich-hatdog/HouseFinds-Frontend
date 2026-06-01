@@ -61,8 +61,6 @@ async function loadReservations() {
   try {
  
     const response = await fetch(`https://housefinds-backend.up.railway.app/api/bookings/${user.id}`, {
- 
-    const response = await fetch(`http://localhost:3000/api/bookings/${user.id}`, {
        headers: { 'Authorization': 'Bearer ' + token }
     });
 
