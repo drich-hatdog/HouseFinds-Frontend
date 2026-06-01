@@ -125,7 +125,7 @@
     try {
       // Fetch fresh data from database
       const response = await fetch(
-        ` housefinds-backends.up.railway.appapi/auth/profile/${user.id}`,
+        ` https://housefinds-backend.up.railway.app/api/auth/profile/${user.id}`,
         { headers: { 'Authorization': 'Bearer ' + token } }
       );
 
@@ -213,7 +213,7 @@
 
     try {
       const response = await fetch(
-        ` housefinds-backends.up.railway.appapi/auth/delete/${loggedInUser.id}`,
+        ` https://housefinds-backend.up.railway.app/api/auth/delete/${loggedInUser.id}`,
         {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + token }

@@ -497,7 +497,7 @@
       if (editId) {
         try {
           const response = await fetch(
-            ` housefinds-backends.up.railway.appapi/rooms/${editId}`
+            ` https://housefinds-backend.up.railway.app/api/rooms/${editId}`
           );
           const house = await response.json();
 
@@ -528,7 +528,7 @@
             if (!confirm("Are you sure you want to delete this house?")) return;
             const token = localStorage.getItem("token");
             const res = await fetch(
-              ` housefinds-backends.up.railway.appapi/rooms/${editId}`, {
+              ` https://housefinds-backend.up.railway.app/api/rooms/${editId}`, {
               method: 'DELETE',
               headers: { 'Authorization': 'Bearer ' + token }
             });
@@ -613,7 +613,7 @@
           }
 
           response = await fetch(
-            ` housefinds-backends.up.railway.appapi/rooms/${existingId}`, {
+            ` https://housefinds-backend.up.railway.app/api/rooms/${existingId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -622,7 +622,7 @@
             body: JSON.stringify(houseData)
           });
         } else {
-          response = await fetch(' housefinds-backends.up.railway.appapi/rooms', {
+          response = await fetch(' https://housefinds-backend.up.railway.app/api/rooms', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

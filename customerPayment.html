@@ -218,7 +218,7 @@
     if (selectedMethod === 'Cash') {
       try {
         const response = await fetch(
-          ` housefinds-backends.up.railway.appapi/bookings/${currentBooking.bookingId}`, {
+          ` https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -259,7 +259,7 @@
       const description = `HouseFinds - ${currentBooking.houseName} (${currentBooking.roomType}) - ${currentBooking.months} month(s)`;
 
       const response = await fetch(
-        ` housefinds-backends.up.railway.appapi/bookings/pay/${currentBooking.bookingId}`, {
+        ` https://housefinds-backend.up.railway.app/api/bookings/pay/${currentBooking.bookingId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -277,7 +277,7 @@
 
       if (response.ok) {
         await fetch(
-          ` housefinds-backends.up.railway.appapi/bookings/${currentBooking.bookingId}`, {
+          ` https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

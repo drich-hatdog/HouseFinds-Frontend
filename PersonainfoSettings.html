@@ -134,7 +134,7 @@
       try {
         // Load fresh data from database
         const response = await fetch(
-          ` housefinds-backends.up.railway.appapi/auth/profile/${user.id}`,
+          ` https://housefinds-backend.up.railway.app/api/auth/profile/${user.id}`,
           { headers: { 'Authorization': 'Bearer ' + token } }
         );
 
@@ -231,7 +231,7 @@
       try {
         // Update profile
         const response = await fetch(
-          ` housefinds-backends.up.railway.appapi/auth/profile/${user.id}`, {
+          ` https://housefinds-backend.up.railway.app/api/auth/profile/${user.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -250,7 +250,7 @@
         // Update password if provided
         if (newPassword) {
           const passResponse = await fetch(
-            ' housefinds-backends.up.railway.appapi/auth/change-password', {
+            ' https://housefinds-backend.up.railway.app/api/auth/change-password', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
