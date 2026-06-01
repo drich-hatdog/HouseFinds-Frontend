@@ -77,7 +77,7 @@ function logout() {
     localStorage.removeItem("loggedInUser");
     window.location.href = "landingpage.html";
 }
-=======
+ 
 document.addEventListener("DOMContentLoaded", () => {
     loadHouseDetails();
 });

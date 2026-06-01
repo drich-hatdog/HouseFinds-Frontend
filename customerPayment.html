@@ -258,7 +258,7 @@
         const response = await fetch(
  
           `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
-=======
+ 
           `http://localhost:3000/api/bookings/${currentBooking.bookingId}`, {
            method: 'PUT',
           headers: {
@@ -313,7 +313,7 @@
       const response = await fetch(
  
         `https://housefinds-backend.up.railway.app/api/bookings/pay/${currentBooking.bookingId}`, {
-=======
+ 
         `http://localhost:3000/api/bookings/pay/${currentBooking.bookingId}`, {
          method: 'POST',
         headers: {
@@ -335,7 +335,7 @@
         await fetch(
  
           `https://housefinds-backend.up.railway.app/api/bookings/${currentBooking.bookingId}`, {
-=======
+ 
           `http://localhost:3000/api/bookings/${currentBooking.bookingId}`, {
            method: 'PUT',
           headers: {

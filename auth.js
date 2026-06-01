@@ -446,7 +446,7 @@ async function resetPassword() {
     alert("Could not connect to server.");
     console.error(err);
   }
-=======
+ 
 /// -----------------------------
 // ROLE SELECTION
 // -----------------------------
