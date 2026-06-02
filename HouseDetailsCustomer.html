@@ -1,599 +1,58 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Boarding House Details</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="Ownerprofilee.css">
 <link rel="stylesheet" href="HouseDetailsCustomer.css">
-</head>
 <style>
-  * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", Arial, sans-serif;
-}
-
-.details-container,
-.dashboard-container,
-.reservation-container,
-.reserve-container {
-    padding-top: 100px !important;
-}
-
-.Home:hover,
-.Dashboard:hover,
-.Reservations:hover {
-  color: #1f23fc;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.container {
-  max-width: 1351px;
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.navbar {
-    width: 100%;
-    background: #eef1ff;
-    padding: 15px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    position: sticky;    
-    top: 0;
-    left: 0;
-
-    z-index: 999;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-
-.logo {
-  height: 42px;
-  width: auto;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-size: 0.9rem;
-  color: #343434;
-}
-
-.createbutton:hover,
-.custolist:hover,
-.booking:hover {
-  color: #ff9800;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.profile-dropdown {
-  position: relative;
-  cursor: pointer;
-}
-
-.profile-link {
-  padding: 6px 10px;
-  display: inline-block;
-  font-weight: 600;
-  border-radius: 999px;
-  background: #f3f3f3;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 101%;
-  right: 0;
-  background-color: #ffffff;
-  min-width: 160px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.dropdown-content a {
-  color: #000;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-  font-size: 0.85rem;
-}
-
-.dropdown-content a:hover {
-  background-color: #fdc97a;
-}
-
-.profile-dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.logout-btn {
-  background: #0004ff;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s;
-  font-size: 0.85rem;
-  color: floralwhite;
-}
-
-.logout-btn:hover {
-  background: #1900ff;
-}
-
-.welcome {
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.profile-main {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  align-items: flex-start;
-  background: #ffffff;
-  padding: 24px 26px 26px;
-}
-
-.profile-photo-wrap {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.profile-photo-card {
-  padding: 10px;
-  border-radius: 24px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-
-.profile-image {
-  width: 100%;
-  max-width: 280px;
-  border-radius: 18px;
-  object-fit: cover;
-  display: block;
-}
-
-.profile-hint {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.profile-details {
-  flex: 1;
-  min-width: 260px;
-}
-
-.profile-header-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.name {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  margin-bottom: 8px;
-}
-
-.role-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #f57c00;
-}
-
-.icon-wrap {
-  flex: 0 0 auto;
-}
-
-.icon {
-  height: 52px;
-  width: auto;
-}
-
-.profile-subtitle {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 14px;
-  max-width: 460px;
-}
-
-.about-title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.about-card {
-  background: #fafafa;
-  border-radius: 18px;
-  padding: 14px 16px;
-  border: 1px solid #eee;
-}
-
-.about-info {
-  font-size: 0.9rem;
-}
-
-.about-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.about-row {
-  display: flex;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px dashed #e0e0e0;
-}
-
-.about-row:last-child {
-  border-bottom: none;
-}
-
-.about-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #7a7a7a;
-}
-
-.about-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #222222;
-  text-align: left;
-  max-width: 60%;
-  word-break: break-word;
-  font-size: larger;
-}
-
-.footer {
-  background: #c26100;
-  color: white;
-  padding: 24px 20px;
-  margin-top: 30px;
-}
-
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.footer-box {
-  flex: 1 1 230px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.Logowhite {
-  height: 45px;
-  width: 190px;
-}
-
-.footer-text {
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.footer-heading {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.footer-box a {
-  color: white;
-  text-decoration: none;
-  font-size: 0.85rem;
-}
-
-.footer-box a:hover {
-  text-decoration: underline;
-}
-
-.newsletter-input {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 0.85rem;
-}
-
-.newsletter-btn {
-  margin-top: 6px;
-  padding: 8px 12px;
-  background: #122CD7;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-@media (max-width: 900px) {
-  .profile-main {
-    flex-direction: column;
-    padding: 20px 18px 22px;
-  }
-
-  .profile-photo-wrap {
-    align-items: flex-start;
-  }
-
-  .profile-image {
-    max-width: 260px;
-  }
-
-  .profile-wrapper {
-    padding: 20px 16px 32px;
-  }
-}
-
-@media (max-width: 600px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px 12px;
-    height: auto;
-  }
-
-  .nav-links {
-    gap: 14px;
-    font-size: 0.85rem;
-  }
-
-  .name {
-    font-size: 1.6rem;
-  }
-
-  .profile-header-row {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .icon {
-    height: 44px;
-  }
-
-  .about-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .about-value {
-    text-align: left;
-    max-width: 100%;
-  }
-
-  .footer {
-    padding: 20px 14px;
-  }
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Raleway", sans-serif;
-  background-color: #f3f5ff;
-}
-
-.details-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px 60px;
-}
-
-/* Header info */
-
-.house-header h1 {
-  font-size: 1.9rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #222;
-}
-
-.house-header p {
-  font-size: 0.95rem;
-  color: #666;
-}
-
-/* Top section */
-
-.house-info {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
-  gap: 22px;
-  margin-top: 22px;
-  margin-bottom: 20px;
-}
-
-.house-img {
-  width: 100%;
-  border-radius: 16px;
-  object-fit: cover;
-  height: 260px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
-}
-
-.house-description {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 18px 20px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.house-description h2 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  color: #222;
-}
-
-.house-description p {
-  font-size: 0.9rem;
-  color: #555;
-  line-height: 1.5;
-}
-
-/* Rooms */
-
-.rooms-section,
-.rating-section,
-.comments-section {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 18px 20px;
-  margin-top: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.rooms-section h2,
-.rating-section h2,
-.comments-section h2 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #222;
-}
-
-.rooms-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 12px;
-}
-
-.room-card {
-  background: #fafbff;
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid #dde2ff;
-  font-size: 0.9rem;
-}
-
-.room-card p {
-  margin: 2px 0;
-}
-
-/* Rating */
-
-.stars {
-  font-size: 1.5rem;
-  color: #ffb300;
-  cursor: pointer;
-  margin-bottom: 6px;
-}
-
-.stars span {
-  margin-right: 2px;
-}
-
-#ratingText {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* Comments */
-
-.comment-card {
-  background: #fafafa;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 8px;
-}
-
-/* Reserve button */
-
-.reserve-wrap {
-  text-align: right;
-  margin-top: 18px;
-}
-
-.reserve-btn {
-  background-color: #1100ff;
-  border: none;
-  color: white;
-  padding: 12px 26px;
-  font-size: 0.95rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(25, 0, 255, 0.4);
-}
-
-.reserve-btn:hover {
-  background-color: #390cff;
-}
-
-
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Raleway", sans-serif; background-color: #f3f5ff; }
+  .details-container { max-width: 1100px; margin: 0 auto; padding: 40px 24px 60px; }
+  .house-header h1 { font-size: 1.9rem; font-weight: 600; margin-bottom: 4px; color: #222; }
+  .house-header p { font-size: 0.95rem; color: #666; }
+  .house-info { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1.2fr); gap: 22px; margin-top: 22px; margin-bottom: 20px; }
+  .house-img { width: 100%; border-radius: 16px; object-fit: cover; height: 260px; box-shadow: 0 4px 14px rgba(0,0,0,0.10); }
+  .house-description { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .house-description h2 { font-size: 1.2rem; margin-bottom: 8px; color: #222; }
+  .house-description p { font-size: 0.9rem; color: #555; line-height: 1.5; }
+  .rooms-section, .rating-section, .comments-section { background: #fff; border-radius: 16px; padding: 18px; margin-top: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+  .rooms-section h2, .rating-section h2, .comments-section h2 { font-size: 1.1rem; margin-bottom: 10px; color: #222; }
+  .rooms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 12px; }
+  .room-card { background: #fafbff; border-radius: 12px; padding: 12px 14px; border: 1px solid #dde2ff; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s; }
+  .room-card:hover { transform: translateY(-2px); }
+  .room-card.selected { border-color: #1100ff; background: #eef0ff; }
+  .room-card p { margin: 2px 0; }
+  .stars { font-size: 1.5rem; color: #ffb300; cursor: pointer; margin-bottom: 6px; }
+  .stars span { margin-right: 2px; }
+  #ratingText { font-size: 0.9rem; color: #555; }
+  .comment-card { background: #fafafa; border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; color: #444; margin-bottom: 8px; }
+  .reserve-wrap { text-align: right; margin-top: 18px; }
+  .reserve-btn { background-color: #1100ff; border: none; color: white; padding: 12px 26px; font-size: 0.95rem; border-radius: 999px; cursor: pointer; font-weight: 600; }
+  .reserve-btn:hover { background-color: #390cff; }
 </style>
+</head>
 <body>
 <div class="container">
 
   <header class="navbar">
     <img class="logo" src="logofindsb.png" alt="Logo">
-
-  <nav class="nav-links">
-    <span onclick="goHome()" class="Home">Home</span>
-    <span onclick="goDashboard()" class="Dashboard">Dashboard</span>
-    <span onclick="goReservations()" class="Reservations">Reservations</span>
-  </nav>
-
+    <nav class="nav-links">
+      <span onclick="goHome()" class="Home">Home</span>
+      <span onclick="goDashboard()" class="Dashboard">Dashboard</span>
+      <span onclick="goReservations()" class="Reservations">Reservations</span>
+    </nav>
     <div class="logout-btn" onclick="logout()">Log Out</div>
   </header>
 
   <main class="details-container">
-
-
-    <div id="houseHeader" class="house-header">
-
-    </div>
+    <div id="houseHeader" class="house-header"></div>
 
     <div class="house-info">
-      <img id="houseImage" class="house-img" src="https://placehold.co/600x400" alt="Boarding House">
-
+      <img id="houseImage" class="house-img"
+        src="https://placehold.co/600x400" alt="Boarding House">
       <div class="house-description">
         <h2>Description</h2>
         <p id="houseDesc">Loading...</p>
@@ -607,7 +66,6 @@ body {
 
     <section class="rating-section">
       <h2>Rate this Boarding House</h2>
-
       <div class="stars">
         <span onclick="rateHouse(1)">★</span>
         <span onclick="rateHouse(2)">★</span>
@@ -615,7 +73,6 @@ body {
         <span onclick="rateHouse(4)">★</span>
         <span onclick="rateHouse(5)">★</span>
       </div>
-
       <p id="ratingText">Tap a star to rate.</p>
     </section>
 
@@ -629,103 +86,97 @@ body {
     <div class="reserve-wrap">
       <button class="reserve-btn" onclick="goReserve()">Reserve Now</button>
     </div>
-
   </main>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
-    const indexStr = localStorage.getItem("selectedHouse");
+  let currentHouse = null;
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const houseData = JSON.parse(
+      localStorage.getItem("selectedRoom") || "null"
+    );
 
     const houseHeader = document.getElementById("houseHeader");
     const houseImageEl = document.getElementById("houseImage");
     const houseDescEl = document.getElementById("houseDesc");
     const roomsList = document.getElementById("roomsList");
 
-    if (indexStr === null) {
-      houseHeader.innerHTML = "<h1>Boarding House</h1><p>No house selected from dashboard.</p>";
-      houseDescEl.textContent = "Please go back to the dashboard and select a boarding house.";
+    if (!houseData) {
+      houseHeader.innerHTML = "<h1>Boarding House</h1><p>No house selected.</p>";
+      houseDescEl.textContent = "Please go back to the dashboard and select a house.";
       return;
     }
 
-    const idx = parseInt(indexStr, 10);
-    const house = houses[idx];
+    try {
+      const response = await fetch(
+        `https://housefinds-backend.up.railway.app/api/rooms/${houseData.id}`
+      );
+      const house = await response.json();
+      currentHouse = house;
 
-    if (!house) {
-      houseHeader.innerHTML = "<h1>Boarding House</h1><p>House data not found.</p>";
-      houseDescEl.textContent = "The selected house could not be loaded.";
-      return;
-    }
+      houseHeader.innerHTML = `
+        <h1>${house.title || "Boarding House"}</h1>
+        <p>${house.location || "No location provided"}</p>
+      `;
 
-    let ownerLine = "";
-    if (house.ownerId) {
-      const allUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
-      const owner = allUsers.find(u => u.id === house.ownerId);
-      if (owner) {
-        const ownerName = (owner.firstName || "") + " " + (owner.lastName || "");
-        ownerLine = `Owned by: <b>${ownerName.trim() || owner.email}</b> (${owner.email})`;
+      if (house.image_url && house.image_url.trim() !== "") {
+        houseImageEl.src = house.image_url;
       }
-    }
 
-    houseHeader.innerHTML = `
-      <h1>${house.houseName || "Boarding House"}</h1>
-      <p>${house.location || "No location provided"}</p>
-      ${ownerLine ? `<p class="owner-line">${ownerLine}</p>` : ""}
-    `;
+      houseDescEl.innerHTML = house.description
+        ? house.description.replace(/\n/g, "<br>")
+        : "No description provided.";
 
-    // IMAGE
-    if (house.imageDataUrl && house.imageDataUrl.trim() !== "") {
-      houseImageEl.src = house.imageDataUrl;
-    }
+      const rooms = house.rooms_data ? JSON.parse(house.rooms_data) : [];
+      roomsList.innerHTML = "";
 
-    if (house.description && house.description.trim() !== "") {
-      houseDescEl.innerHTML = house.description.replace(/\\n/g, "<br>");
-    } else {
-      houseDescEl.textContent = "No description provided by the owner.";
-    }
+      if (!rooms.length) {
+        roomsList.innerHTML = "<p>No rooms listed for this house.</p>";
+      } else {
+        rooms.forEach(room => {
+          if (room.roomAvailability &&
+              room.roomAvailability.toLowerCase() === "occupied") return;
 
-    roomsList.innerHTML = "";
-    if (!Array.isArray(house.rooms) || house.rooms.length === 0) {
-      roomsList.innerHTML = "<p>No rooms listed for this house.</p>";
-    } else {
-      house.rooms.forEach(room => {
-        const card = document.createElement("div");
-        card.classList.add("room-card");
-        card.innerHTML = `
-          <p><b>${room.roomType || "Room"}</b></p>
-          <p>Room No.: ${room.roomNumber || "-"}</p>
-          <p>Price: ₱${room.roomPrice || room.price || 0} / month</p>
-          <p>Capacity: ${room.capacity || "—"}</p>
-          <p>${room.roomDescription || ""}</p>
-        `;
-        roomsList.appendChild(card);
-      });
-    }
+          const card = document.createElement("div");
+          card.classList.add("room-card");
 
-    const ratingKey = "rating_" + (house.id || idx);
-    const savedRating = parseInt(localStorage.getItem(ratingKey) || "0", 10);
-    if (savedRating > 0) {
-      highlightStars(savedRating);
-      document.getElementById("ratingText").textContent =
-        "You rated this house " + savedRating + " star(s).";
+          const imgHtml = room.imageDataUrl
+            ? `<img src="${room.imageDataUrl}"
+                style="width:100%;border-radius:8px;margin-bottom:8px;">`
+            : "";
+
+          card.innerHTML = `
+            ${imgHtml}
+            <p><b>${room.roomType || "Room"}</b></p>
+            <p>Room No.: ${room.roomNumber || "-"}</p>
+            <p>Price: ₱${room.roomPrice || 0}/month</p>
+            <p>Capacity: ${room.roomCapacity || "—"} person/s</p>
+            <p>${room.roomDescription || ""}</p>
+          `;
+
+          roomsList.appendChild(card);
+        });
+      }
+
+      const ratingKey = "rating_" + house.id;
+      const savedRating = parseInt(localStorage.getItem(ratingKey) || "0", 10);
+      if (savedRating > 0) {
+        highlightStars(savedRating);
+        document.getElementById("ratingText").textContent =
+          "You rated this house " + savedRating + " star(s).";
+      }
+
+    } catch (err) {
+      houseDescEl.textContent = "Could not load house details.";
+      console.error(err);
     }
   });
 
   function rateHouse(stars) {
-    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
-    const indexStr = localStorage.getItem("selectedHouse");
-    const idx = parseInt(indexStr || "-1", 10);
-    const house = houses[idx];
-
-    if (!house) {
-      alert("No house found to rate.");
-      return;
-    }
-
-    const ratingKey = "rating_" + (house.id || idx);
+    if (!currentHouse) return;
+    const ratingKey = "rating_" + currentHouse.id;
     localStorage.setItem(ratingKey, String(stars));
-
     highlightStars(stars);
     document.getElementById("ratingText").textContent =
       "You rated this house " + stars + " star(s).";
@@ -734,11 +185,7 @@ body {
   function highlightStars(stars) {
     const starEls = document.querySelectorAll(".stars span");
     starEls.forEach((span, i) => {
-      if (i < stars) {
-        span.style.color = "#ffb300";
-      } else {
-        span.style.color = "#ddd";
-      }
+      span.style.color = i < stars ? "#ffb300" : "#ddd";
     });
   }
 
@@ -746,792 +193,15 @@ body {
     window.location.href = "customerReserve.html";
   }
 
-  function goHome() {
-    window.location.href = "Customerprofile.html";
-  }
-
-  function goDashboard() {
-    window.location.href = "customerDashboard.html";
-  }
-
-  function goReservations() {
-    window.location.href = "customerReservations.html";
-  }
+  function goHome() { window.location.href = "Customerprofile.html"; }
+  function goDashboard() { window.location.href = "customerDashboard.html"; }
+  function goReservations() { window.location.href = "customerReservations.html"; }
 
   function logout() {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
     window.location.href = "landingpage.html";
   }
 </script>
-
 </body>
 </html>
- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boarding House Details</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="Ownerprofilee.css">
-<link rel="stylesheet" href="HouseDetailsCustomer.css">
-</head>
-<style>
-  * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", Arial, sans-serif;
-}
-
-.details-container,
-.dashboard-container,
-.reservation-container,
-.reserve-container {
-    padding-top: 100px !important;
-}
-
-.Home:hover,
-.Dashboard:hover,
-.Reservations:hover {
-  color: #1f23fc;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.container {
-  max-width: 1351px;
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.navbar {
-    width: 100%;
-    background: #eef1ff;
-    padding: 15px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    position: sticky;    
-    top: 0;
-    left: 0;
-
-    z-index: 999;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-
-.logo {
-  height: 42px;
-  width: auto;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-size: 0.9rem;
-  color: #343434;
-}
-
-.createbutton:hover,
-.custolist:hover,
-.booking:hover {
-  color: #ff9800;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.profile-dropdown {
-  position: relative;
-  cursor: pointer;
-}
-
-.profile-link {
-  padding: 6px 10px;
-  display: inline-block;
-  font-weight: 600;
-  border-radius: 999px;
-  background: #f3f3f3;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 101%;
-  right: 0;
-  background-color: #ffffff;
-  min-width: 160px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.dropdown-content a {
-  color: #000;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-  font-size: 0.85rem;
-}
-
-.dropdown-content a:hover {
-  background-color: #fdc97a;
-}
-
-.profile-dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.logout-btn {
-  background: #0004ff;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s;
-  font-size: 0.85rem;
-  color: floralwhite;
-}
-
-.logout-btn:hover {
-  background: #1900ff;
-}
-
-.welcome {
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.profile-main {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  align-items: flex-start;
-  background: #ffffff;
-  padding: 24px 26px 26px;
-}
-
-.profile-photo-wrap {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.profile-photo-card {
-  padding: 10px;
-  border-radius: 24px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-
-.profile-image {
-  width: 100%;
-  max-width: 280px;
-  border-radius: 18px;
-  object-fit: cover;
-  display: block;
-}
-
-.profile-hint {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.profile-details {
-  flex: 1;
-  min-width: 260px;
-}
-
-.profile-header-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.name {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  margin-bottom: 8px;
-}
-
-.role-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #f57c00;
-}
-
-.icon-wrap {
-  flex: 0 0 auto;
-}
-
-.icon {
-  height: 52px;
-  width: auto;
-}
-
-.profile-subtitle {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 14px;
-  max-width: 460px;
-}
-
-.about-title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.about-card {
-  background: #fafafa;
-  border-radius: 18px;
-  padding: 14px 16px;
-  border: 1px solid #eee;
-}
-
-.about-info {
-  font-size: 0.9rem;
-}
-
-.about-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.about-row {
-  display: flex;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px dashed #e0e0e0;
-}
-
-.about-row:last-child {
-  border-bottom: none;
-}
-
-.about-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #7a7a7a;
-}
-
-.about-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #222222;
-  text-align: left;
-  max-width: 60%;
-  word-break: break-word;
-  font-size: larger;
-}
-
-.footer {
-  background: #c26100;
-  color: white;
-  padding: 24px 20px;
-  margin-top: 30px;
-}
-
-.footer-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.footer-box {
-  flex: 1 1 230px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.Logowhite {
-  height: 45px;
-  width: 190px;
-}
-
-.footer-text {
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.footer-heading {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.footer-box a {
-  color: white;
-  text-decoration: none;
-  font-size: 0.85rem;
-}
-
-.footer-box a:hover {
-  text-decoration: underline;
-}
-
-.newsletter-input {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 0.85rem;
-}
-
-.newsletter-btn {
-  margin-top: 6px;
-  padding: 8px 12px;
-  background: #122CD7;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-@media (max-width: 900px) {
-  .profile-main {
-    flex-direction: column;
-    padding: 20px 18px 22px;
-  }
-
-  .profile-photo-wrap {
-    align-items: flex-start;
-  }
-
-  .profile-image {
-    max-width: 260px;
-  }
-
-  .profile-wrapper {
-    padding: 20px 16px 32px;
-  }
-}
-
-@media (max-width: 600px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px 12px;
-    height: auto;
-  }
-
-  .nav-links {
-    gap: 14px;
-    font-size: 0.85rem;
-  }
-
-  .name {
-    font-size: 1.6rem;
-  }
-
-  .profile-header-row {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .icon {
-    height: 44px;
-  }
-
-  .about-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .about-value {
-    text-align: left;
-    max-width: 100%;
-  }
-
-  .footer {
-    padding: 20px 14px;
-  }
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Raleway", sans-serif;
-  background-color: #f3f5ff;
-}
-
-.details-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px 60px;
-}
-
-/* Header info */
-
-.house-header h1 {
-  font-size: 1.9rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #222;
-}
-
-.house-header p {
-  font-size: 0.95rem;
-  color: #666;
-}
-
-/* Top section */
-
-.house-info {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
-  gap: 22px;
-  margin-top: 22px;
-  margin-bottom: 20px;
-}
-
-.house-img {
-  width: 100%;
-  border-radius: 16px;
-  object-fit: cover;
-  height: 260px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
-}
-
-.house-description {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 18px 20px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.house-description h2 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  color: #222;
-}
-
-.house-description p {
-  font-size: 0.9rem;
-  color: #555;
-  line-height: 1.5;
-}
-
-/* Rooms */
-
-.rooms-section,
-.rating-section,
-.comments-section {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 18px 20px;
-  margin-top: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.rooms-section h2,
-.rating-section h2,
-.comments-section h2 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #222;
-}
-
-.rooms-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 12px;
-}
-
-.room-card {
-  background: #fafbff;
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid #dde2ff;
-  font-size: 0.9rem;
-}
-
-.room-card p {
-  margin: 2px 0;
-}
-
-/* Rating */
-
-.stars {
-  font-size: 1.5rem;
-  color: #ffb300;
-  cursor: pointer;
-  margin-bottom: 6px;
-}
-
-.stars span {
-  margin-right: 2px;
-}
-
-#ratingText {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* Comments */
-
-.comment-card {
-  background: #fafafa;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 8px;
-}
-
-/* Reserve button */
-
-.reserve-wrap {
-  text-align: right;
-  margin-top: 18px;
-}
-
-.reserve-btn {
-  background-color: #1100ff;
-  border: none;
-  color: white;
-  padding: 12px 26px;
-  font-size: 0.95rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(25, 0, 255, 0.4);
-}
-
-.reserve-btn:hover {
-  background-color: #390cff;
-}
-
-
-</style>
-<body>
-<div class="container">
-
-  <header class="navbar">
-    <img class="logo" src="logofindsb.png" alt="Logo">
-
-  <nav class="nav-links">
-    <span onclick="goHome()" class="Home">Home</span>
-    <span onclick="goDashboard()" class="Dashboard">Dashboard</span>
-    <span onclick="goReservations()" class="Reservations">Reservations</span>
-  </nav>
-
-    <div class="logout-btn" onclick="logout()">Log Out</div>
-  </header>
-
-  <main class="details-container">
-
-
-    <div id="houseHeader" class="house-header">
-
-    </div>
-
-    <div class="house-info">
-      <img id="houseImage" class="house-img" src="https://placehold.co/600x400" alt="Boarding House">
-
-      <div class="house-description">
-        <h2>Description</h2>
-        <p id="houseDesc">Loading...</p>
-      </div>
-    </div>
-
-    <section class="rooms-section">
-      <h2>Available Rooms</h2>
-      <div id="roomsList" class="rooms-grid"></div>
-    </section>
-
-    <section class="rating-section">
-      <h2>Rate this Boarding House</h2>
-
-      <div class="stars">
-        <span onclick="rateHouse(1)">★</span>
-        <span onclick="rateHouse(2)">★</span>
-        <span onclick="rateHouse(3)">★</span>
-        <span onclick="rateHouse(4)">★</span>
-        <span onclick="rateHouse(5)">★</span>
-      </div>
-
-      <p id="ratingText">Tap a star to rate.</p>
-    </section>
-
-    <section class="comments-section">
-      <h2>Top Comments</h2>
-      <div class="comment-card">"Very clean and well-maintained rooms!" — <b>John D.</b></div>
-      <div class="comment-card">"Owner is kind and responsive. Highly recommended!" — <b>Maria S.</b></div>
-      <div class="comment-card">"Affordable and near UEP. Great choice for students." — <b>Ricardo P.</b></div>
-    </section>
-
-    <div class="reserve-wrap">
-      <button class="reserve-btn" onclick="goReserve()">Reserve Now</button>
-    </div>
-
-  </main>
-</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
-    const indexStr = localStorage.getItem("selectedHouse");
-
-    const houseHeader = document.getElementById("houseHeader");
-    const houseImageEl = document.getElementById("houseImage");
-    const houseDescEl = document.getElementById("houseDesc");
-    const roomsList = document.getElementById("roomsList");
-
-    if (indexStr === null) {
-      houseHeader.innerHTML = "<h1>Boarding House</h1><p>No house selected from dashboard.</p>";
-      houseDescEl.textContent = "Please go back to the dashboard and select a boarding house.";
-      return;
-    }
-
-    const idx = parseInt(indexStr, 10);
-    const house = houses[idx];
-
-    if (!house) {
-      houseHeader.innerHTML = "<h1>Boarding House</h1><p>House data not found.</p>";
-      houseDescEl.textContent = "The selected house could not be loaded.";
-      return;
-    }
-
-    let ownerLine = "";
-    if (house.ownerId) {
-      const allUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
-      const owner = allUsers.find(u => u.id === house.ownerId);
-      if (owner) {
-        const ownerName = (owner.firstName || "") + " " + (owner.lastName || "");
-        ownerLine = `Owned by: <b>${ownerName.trim() || owner.email}</b> (${owner.email})`;
-      }
-    }
-
-    houseHeader.innerHTML = `
-      <h1>${house.houseName || "Boarding House"}</h1>
-      <p>${house.location || "No location provided"}</p>
-      ${ownerLine ? `<p class="owner-line">${ownerLine}</p>` : ""}
-    `;
-
-    // IMAGE
-    if (house.imageDataUrl && house.imageDataUrl.trim() !== "") {
-      houseImageEl.src = house.imageDataUrl;
-    }
-
-    if (house.description && house.description.trim() !== "") {
-      houseDescEl.innerHTML = house.description.replace(/\\n/g, "<br>");
-    } else {
-      houseDescEl.textContent = "No description provided by the owner.";
-    }
-
-    roomsList.innerHTML = "";
-    if (!Array.isArray(house.rooms) || house.rooms.length === 0) {
-      roomsList.innerHTML = "<p>No rooms listed for this house.</p>";
-    } else {
-      house.rooms.forEach(room => {
-        const card = document.createElement("div");
-        card.classList.add("room-card");
-        card.innerHTML = `
-          <p><b>${room.roomType || "Room"}</b></p>
-          <p>Room No.: ${room.roomNumber || "-"}</p>
-          <p>Price: ₱${room.roomPrice || room.price || 0} / month</p>
-          <p>Capacity: ${room.capacity || "—"}</p>
-          <p>${room.roomDescription || ""}</p>
-        `;
-        roomsList.appendChild(card);
-      });
-    }
-
-    const ratingKey = "rating_" + (house.id || idx);
-    const savedRating = parseInt(localStorage.getItem(ratingKey) || "0", 10);
-    if (savedRating > 0) {
-      highlightStars(savedRating);
-      document.getElementById("ratingText").textContent =
-        "You rated this house " + savedRating + " star(s).";
-    }
-  });
-
-  function rateHouse(stars) {
-    const houses = JSON.parse(localStorage.getItem("houses") || "[]");
-    const indexStr = localStorage.getItem("selectedHouse");
-    const idx = parseInt(indexStr || "-1", 10);
-    const house = houses[idx];
-
-    if (!house) {
-      alert("No house found to rate.");
-      return;
-    }
-
-    const ratingKey = "rating_" + (house.id || idx);
-    localStorage.setItem(ratingKey, String(stars));
-
-    highlightStars(stars);
-    document.getElementById("ratingText").textContent =
-      "You rated this house " + stars + " star(s).";
-  }
-
-  function highlightStars(stars) {
-    const starEls = document.querySelectorAll(".stars span");
-    starEls.forEach((span, i) => {
-      if (i < stars) {
-        span.style.color = "#ffb300";
-      } else {
-        span.style.color = "#ddd";
-      }
-    });
-  }
-
-  function goReserve() {
-    window.location.href = "customerReserve.html";
-  }
-
-  function goHome() {
-    window.location.href = "Customerprofile.html";
-  }
-
-  function goDashboard() {
-    window.location.href = "customerDashboard.html";
-  }
-
-  function goReservations() {
-    window.location.href = "customerReservations.html";
-  }
-
-  function logout() {
-    localStorage.removeItem("loggedInUser");
-    window.location.href = "landingpage.html";
-  }
-</script>
-
-</body>
-</html>
- 
